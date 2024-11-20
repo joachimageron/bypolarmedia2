@@ -1,3 +1,3 @@
 export { default } from "next-auth/middleware"
-
-export const config = { matcher: ["/profil"] }
+console.log("middleware.ts")
+export const config = { matcher: ["/dd"] }

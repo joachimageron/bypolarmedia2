@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, {getServerSession} from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/prisma/prisma"
 import GithubProvider from "next-auth/providers/github";
@@ -11,7 +11,7 @@ if (!client_id || !client_secret) {
   );
 }
 
-export const nextAuth = NextAuth({
+const authOptions = {
   adapter: PrismaAdapter(prisma),
   // session: {
   //   // Choose how you want to save the user session.
@@ -36,4 +36,9 @@ export const nextAuth = NextAuth({
     newUser: '/profil' // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   secret: process.env.NEXTAUTH_SECRET,
-})
+}
+export const nextAuth = NextAuth(authOptions)
+
+export async function serverSession (){
+  return getServerSession(authOptions)
+}
