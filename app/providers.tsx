@@ -1,11 +1,20 @@
-
 // app/providers.jsx
 "use client";
 
-import { SessionProvider } from "next-auth/react";
+import {SessionProvider} from "next-auth/react";
+import {NextUIProvider} from "@nextui-org/system";
+// import {useRouter} from 'next/navigation'
 
-export default function Providers({ children }: Readonly<{
+export default function Providers({children}: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <SessionProvider>{children}</SessionProvider>;
+  // const router = useRouter();
+  
+  return (
+    <SessionProvider>
+      <NextUIProvider>
+        {children}
+      </NextUIProvider>
+    </SessionProvider>
+  );
 }

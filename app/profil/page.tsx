@@ -5,7 +5,6 @@ export default function profil (){
   
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { data: session } = useSession();
-  console.log(session);
   
   return (
     <div>
