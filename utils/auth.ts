@@ -1,6 +1,6 @@
-import NextAuth, {getServerSession} from "next-auth"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "@/prisma/prisma"
+import NextAuth, {getServerSession, NextAuthOptions} from "next-auth"
+import {PrismaAdapter} from "@auth/prisma-adapter"
+import {prisma} from "@/prisma/prisma"
 import GithubProvider from "next-auth/providers/github";
 
 const client_id = process.env.GITHUB_ID;
@@ -11,17 +11,17 @@ if (!client_id || !client_secret) {
   );
 }
 
-const authOptions = {
+const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  // session: {
-  //   // Choose how you want to save the user session.
-  //   // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
-  //   // If you use an `adapter` however, we default it to `"database"` instead.
-  //   // You can still force a JWT session by explicitly defining `"jwt"`.
-  //   // When using `"database"`, the session cookie will only contain a `sessionToken` value,
-  //   // which is used to look up the session in the database.
-  //   strategy: "jwt"
-  // },
+  session: {
+    // Choose how you want to save the user session.
+    // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
+    // If you use an `adapter` however, we default it to `"database"` instead.
+    // You can still force a JWT session by explicitly defining `"jwt"`.
+    // When using `"database"`, the session cookie will only contain a `sessionToken` value,
+    // which is used to look up the session in the database.
+    strategy: "jwt"
+  },
   providers: [
     GithubProvider({
       clientId: client_id,
@@ -37,8 +37,10 @@ const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 }
+
 export const nextAuth = NextAuth(authOptions)
 
-export async function serverSession (){
+export async function serverSession() {
+
   return getServerSession(authOptions)
 }
