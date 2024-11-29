@@ -1,4 +1,4 @@
-import {userExists} from "@/utils/data";
+import {getUserById, userExists} from "@/utils/data";
 import {notFound} from "next/navigation";
 import ProfilHeader from "@/app/profil/[userId]/ProfilHeader";
 
@@ -8,6 +8,7 @@ interface ProfilePageProps {
 
 export default async function Profil({params}: Readonly<ProfilePageProps>) {
   // const session = await serverSession() as Session
+
   const {userId} = await params
   
   let userExist
@@ -15,18 +16,15 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
     userExist = await userExists(userId)
     if (!userExist) notFound()
   }
-  console.log(userExist)
+  const userInfo = await getUserById(userId)
   
   
   // console.log(userInfo)
   return (
-    <>
-      <main>
-        <ProfilHeader/>
+      <main className={"m-auto max-w-xl bg-amber-950"}>
+        <ProfilHeader userInfo={userInfo}/>
         user profil
         {/*{userInfo?.name}*/}
       </main>
-      <p>coucou</p>
-    </>
   );
 }

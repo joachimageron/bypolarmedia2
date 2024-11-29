@@ -1,7 +1,7 @@
-
-import Image from "next/image";
-import {Button} from "@nextui-org/button";
-import {Spacer} from "@nextui-org/react";
+"use client";
+import {Button, Card, CardHeader, CardBody, Divider} from "@nextui-org/react";
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
 
 export default function Home() {
   
@@ -24,27 +24,29 @@ export default function Home() {
   //
   // };
   
+  const {data} = useSession();
+  const router = useRouter();
+  console.log(data);
+  
   return (
       <div>
-        <h1>Next.js + TypeScript + Tailwind CSS</h1>
-        <Image
-          src="/vercel.svg"
-          alt="Vercel Logo"
-          width={72}
-          height={16}
-        />
-        {/*<Button color="primary" variant="bordered">Button</Button>*/}
-        {/*<Button color="success" onPress={handleSuccess}>*/}
-        {/*  Afficher Succès*/}
-        {/*</Button>*/}
-        {/*<Spacer y={0.5} />*/}
-        {/*<Button color="warning" onPress={handleError}>*/}
-        {/*  Afficher Erreur*/}
-        {/*</Button>*/}
-        {/*<Spacer y={0.5} />*/}
-        {/*<Button color="primary" onPress={handleInfo}>*/}
-        {/*  Afficher Info*/}
-        {/*</Button>*/}
+        
+        <Card className="max-w-[200px] m-auto mt-20">
+          <CardHeader className="flex gap-3">
+ 
+            <div className="flex flex-col">
+              <p className="text-md">bouttons de navigation</p>
+            </div>
+          </CardHeader>
+          <Divider/>
+          <CardBody>
+            {data?.user && <Button onPress={() => router.push(`profil/${data.user.userId}`)}
+                                   className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg">Profil
+               utilisateur</Button>}
+            <Button onPress={() => router.push("auth/signin")}
+                    className="mt-3 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg">Connexion</Button>
+          </CardBody>
+        </Card>
       </div>
   );
 }

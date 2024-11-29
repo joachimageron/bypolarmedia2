@@ -39,7 +39,6 @@ export async function getUserById(userId: string | null){
   return await prisma.user.findUnique({
     where: { id: userId },
     include: {
-      posts: true,
       followers: true,
       following: true,
     },
