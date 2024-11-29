@@ -1,6 +1,6 @@
 import {serverSession} from "@/utils/auth";
 import {permanentRedirect} from "next/navigation";
-import SignInButton from "@/app/auth/signin/siginButton";
+import {SignInButton, SignOutButton} from "@/app/components/AuthButton";
 
 
 type Params = Promise<{ [key: string]: string }>;
@@ -29,9 +29,13 @@ export default async function Template({
   return (
     <div>
       <h1>Sign in</h1>
-      <p>This is the sign in page</p>
+      <p>session :</p>
+      <p>email :</p>
       <p>{session?.user?.email}</p>
+      <p>user id</p>
+      <p>{session?.user?.userId}</p>
       <SignInButton/>
+      <SignOutButton/>
     </div>
   )
 }
