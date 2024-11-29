@@ -3,6 +3,7 @@
 
 import {SessionProvider} from "next-auth/react";
 import {NextUIProvider} from "@nextui-org/system";
+import NotificationProvider from "./NotificationProvider"
 // import {useRouter} from 'next/navigation'
 
 export default function Providers({children}: Readonly<{
@@ -13,7 +14,9 @@ export default function Providers({children}: Readonly<{
   return (
     <SessionProvider>
       <NextUIProvider>
+        <NotificationProvider>
         {children}
+        </NotificationProvider>
       </NextUIProvider>
     </SessionProvider>
   );

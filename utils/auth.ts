@@ -3,31 +3,43 @@ import {PrismaAdapter} from "@auth/prisma-adapter"
 import {prisma} from "@/prisma/prisma"
 import GithubProvider from "next-auth/providers/github";
 
-const client_id = process.env.GITHUB_ID;
-const client_secret = process.env.GITHUB_SECRET;
-if (!client_id || !client_secret) {
+const githubId = process.env.GITHUB_ID;
+const githubSecret = process.env.GITHUB_SECRET;
+if (typeof githubId === "undefined" || typeof githubSecret === "undefined") {
+  
   throw new Error(
-    "Missing GITHUB_ID and GITHUB_SECRET environment variables"
+    `Missing GITHUB_ID and GITHUB_SECRET environment variables ${githubId} ${githubSecret}`
   );
 }
 
 const authOptions: NextAuthOptions = {
+    providers: [
+      GithubProvider({
+        clientId: githubId,
+        clientSecret: githubSecret,
+      }),
+    ],
   adapter: PrismaAdapter(prisma),
   session: {
-    // Choose how you want to save the user session.
-    // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
-    // If you use an `adapter` however, we default it to `"database"` instead.
-    // You can still force a JWT session by explicitly defining `"jwt"`.
-    // When using `"database"`, the session cookie will only contain a `sessionToken` value,
-    // which is used to look up the session in the database.
     strategy: "jwt"
   },
-  providers: [
-    GithubProvider({
-      clientId: client_id,
-      clientSecret: client_secret,
-    }),
-  ],
+  callbacks: {
+    async jwt({ token, account, user }) {
+      if (account) {
+        token.accessToken = account.access_token
+        token.userId = user?.id
+      }
+      return token
+    },
+    async session({ session, token }) {
+      
+      if (typeof token.accessToken === "string" && typeof token.userId === "string") {
+        session.accessToken = token.accessToken
+        session.user.userId = token.userId
+      }
+      return session
+    }
+  },
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
@@ -41,6 +53,5 @@ const authOptions: NextAuthOptions = {
 export const nextAuth = NextAuth(authOptions)
 
 export async function serverSession() {
-
   return getServerSession(authOptions)
 }
