@@ -21,10 +21,9 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
   
   // console.log(userInfo)
   return (
-      <main className={"m-auto max-w-xl bg-amber-950"}>
+      <main className={"m-auto max-w-xl"}>
         <ProfilHeader userInfo={userInfo}/>
-        user profil
-        {/*{userInfo?.name}*/}
+        
       </main>
   );
 }
