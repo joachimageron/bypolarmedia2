@@ -10,7 +10,7 @@ declare module "next-auth" {
     accessToken: string |  null
     user: {
       /** The user's postal address. */
-      userId: string | null
+      userId: string
     } & DefaultSession['user']
   }
   

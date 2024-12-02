@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from 'react';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
+import {Modal, ModalContent, ModalHeader, ModalBody, Divider} from '@nextui-org/react';
 
 interface NotificationModalProps {
   isOpen: boolean;
@@ -27,27 +27,34 @@ const NotificationModal: React.FC<NotificationModalProps> = ({ isOpen, onClose, 
       break;
   }
   
-  // Optionnel : Fermeture automatique après 3 secondes
+  // Optionnel : Fermeture automatique après 4 secondes
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
         onClose();
-      }, 3000); // 3000 ms = 3 secondes
+      }, 4000); // 3000 ms = 3 secondes
       return () => clearTimeout(timer);
     }
   }, [isOpen, onClose]);
   
   return (
-    <Modal isOpen={isOpen} onOpenChange={onClose} placement="top" backdrop={"transparent"}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onClose}
+      placement="top"
+      backdrop={"transparent"}
+      className={`bg-${modalColor}-500 text-zinc-50`}
+    >
       <ModalContent>
         <>
-          <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
-          <ModalBody>
+          <ModalHeader className="">{title}</ModalHeader>
+          <Divider  />
+          <ModalBody className={""}>
+            <div className={"bg-success-500 hidden"}></div>
+            <div className={"bg-danger-500 hidden"}></div>
+            <div className={"bg-primary-500 hidden"}></div>
             <p>{message}</p>
           </ModalBody>
-          <ModalFooter>
-
-          </ModalFooter>
         </>
       </ModalContent>
     </Modal>

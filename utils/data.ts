@@ -1,4 +1,4 @@
-
+'use server'
 import {prisma} from "@/prisma/prisma";
 
 // ---------------------------
@@ -84,8 +84,9 @@ export async function updateUser(userId: string, data: Partial<{
 export async function createPost(data: {
   authorId: string;
   content: string;
+  
 }) {
-  return await prisma.post.create({
+  return prisma.post.create({
     data,
   });
 }
@@ -94,7 +95,7 @@ export async function createPost(data: {
  * Récupérer une publication par son ID
  */
 export async function getPostById(postId: string) {
-  return await prisma.post.findUnique({
+  return prisma.post.findUnique({
     where: { id: postId },
     include: {
       author: true,
@@ -114,7 +115,7 @@ export async function getPostById(postId: string) {
  * Récupérer toutes les publications (avec pagination)
  */
 export async function getAllPosts(skip: number = 0, take: number = 10) {
-  return await prisma.post.findMany({
+  return prisma.post.findMany({
     skip,
     take,
     orderBy: {
@@ -140,7 +141,7 @@ export async function addComment(data: {
   authorId: string;
   content: string;
 }) {
-  return await prisma.comment.create({
+  return prisma.comment.create({
     data,
   });
 }
@@ -337,7 +338,7 @@ export async function addMediaToPost(data: {
   url: string;
   type: string;
 }) {
-  return await prisma.media.create({
+  return prisma.media.create({
     data,
   });
 }

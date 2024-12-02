@@ -70,7 +70,7 @@ model Authenticator {
 model Post {
   id        String   @id @default(cuid())
   authorId  String
-  content   String
+  content   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -79,8 +79,6 @@ model Post {
   likes    Like[]
   media    Media[]
   hashtags PostHashtag[]
-
-  // Ajoutez d'autres champs comme 'title' si nécessaire
 }
 
 model Comment {
