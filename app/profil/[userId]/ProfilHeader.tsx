@@ -7,11 +7,11 @@ import {Button, Image} from "@nextui-org/react";
 export default function ProfilHeader({userInfo}: Readonly<getUserById>) {
   return (
     <section className={""}>
-      <Image className={"rounded-none"} src={userInfo?.bgImage ?? null} alt={"background image of the user"}/>
+      <Image isBlurred className={""} src={userInfo?.bgImage ?? undefined} alt={"background image of the user"}/>
       <div className={"p-5"}>
         <div className={"flex justify-between items-end -mt-14"}>
-          <Image isBlurred className={"rounded-full w-28"} src={userInfo?.image ?? null} alt={"profile picture"}/>
-          <Button>Edite profil</Button>
+          <Image className={"rounded-full w-28"} src={userInfo?.image ?? undefined} alt={"profile picture"}/>
+          <Button color={"primary"}>Edite profil</Button>
         </div>
         <h1 className={"text-xl font-bold mt-5"}>{userInfo?.name}</h1>
         <p>{userInfo?.description}</p>

@@ -1,16 +1,27 @@
+import Link from "next/link";
+import HomeIcon from "./icons/HomeIcon";
+import SearchIcon from "./icons/SearchIcon";
+import {serverSession} from "@/utils/auth";
+import UserImage from "@/app/components/UserImage";
+import PostModal from "@/app/components/PostModal";
 
-
-export default function NavigationBar() {
+export default async function NavigationBar() {
+  const session = await serverSession();
   
   return (
-    <nav className={"flex justify-between items-center"}>
-      <div className={"flex items-center"}>
-        <h1 className={"text-2xl font-bold"}>Bypolar</h1>
-      </div>
-      <div className={"flex items-center gap-4"}>
-        <button className={"btn"}>Connexion</button>
-        <button className={"btn btn-primary"}>Inscription</button>
-      </div>
+    <nav className={"fixed bottom-0 left-0 w-full h-12 flex justify-center gap-10 items-center bg-primary"}>
+      <Link href={"/"} className={"w-7"}>
+          <HomeIcon />
+      </Link>
+      <Link href={"search"} className={"w-7"}>
+          <SearchIcon />
+      </Link>
+      <PostModal/>
+      {session &&
+         <Link href={`/profil/${session.user.userId}`}>
+            <UserImage userImageUrl={session.user.image ?? ""} className={"rounded-full w-7"}/>
+         </Link>
+      }
     </nav>
   )
 }

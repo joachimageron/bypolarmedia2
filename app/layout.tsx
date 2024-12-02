@@ -1,6 +1,7 @@
 import './styles/global.css';
 import type {Metadata} from "next";
 import Providers from "@/app/components/providers/Providers";
+import NavigationBar from "@/app/components/NavigationBar";
 
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export default function RootLayout({
     <body>
     <Providers>
       {children}
-      
+      <NavigationBar/>
     </Providers>
     </body>
     </html>
