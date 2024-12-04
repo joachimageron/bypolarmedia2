@@ -2,6 +2,7 @@ import {getPostsByUser, getUserById, userExists} from "@/utils/data";
 import {notFound} from "next/navigation";
 import ProfilHeader from "@/app/profil/[userId]/ProfilHeader";
 import {PostList} from "@/app/components/PostList";
+import {Divider} from "@nextui-org/react";
 
 interface ProfilePageProps {
   params: { userId: string }; // TypeScript : définissez le type des paramètres
@@ -23,8 +24,11 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
   
   // console.log(userInfo)
   return (
-      <main className={"m-auto max-w-xl"}>
+      <main className={"m-auto max-w-xl mb-20"}>
         <ProfilHeader userInfo={userInfo}/>
+        <Divider className={"my-2"}/>
+        <h2 className={"text-center font-bold"}>Posts</h2>
+        <Divider className="my-2"/>
         <PostList posts={userPosts}/>
       </main>
   );
