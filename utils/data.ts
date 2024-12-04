@@ -129,6 +129,29 @@ export async function getAllPosts(skip: number = 0, take: number = 10) {
   });
 }
 
+/**
+ * Récupérer toutes les publications d'un utilisateur
+ */
+export async function getPostsByUser(userId: string) {
+  return prisma.post.findMany({
+    where: { authorId: userId },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      comments: true,
+      likes: true,
+      media: true,
+      hashtags: {
+        include: {
+          hashtag: true,
+        },
+      },
+      author: true,
+    },
+  });
+}
+
 // ---------------------------
 // Méthodes pour les Commentaires
 // ---------------------------
