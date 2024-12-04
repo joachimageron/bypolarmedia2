@@ -110,7 +110,7 @@ export default {
             900: "#5B3B00",
           },
           danger:{
-            DEFAULT: "#AA123D",
+            DEFAULT: "#CC435C",
             100: "#FAD2CD",
             200: "#F69F9E",
             300: "#E56A75",
