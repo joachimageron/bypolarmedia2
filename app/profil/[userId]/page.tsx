@@ -1,6 +1,7 @@
-import {getUserById, userExists} from "@/utils/data";
+import {getPostsByUser, getUserById, userExists} from "@/utils/data";
 import {notFound} from "next/navigation";
 import ProfilHeader from "@/app/profil/[userId]/ProfilHeader";
+import {PostList} from "@/app/components/PostList";
 
 interface ProfilePageProps {
   params: { userId: string }; // TypeScript : définissez le type des paramètres
@@ -17,13 +18,14 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
     if (!userExist) notFound()
   }
   const userInfo = await getUserById(userId)
+  const userPosts = await getPostsByUser(userId)
   
   
   // console.log(userInfo)
   return (
       <main className={"m-auto max-w-xl"}>
         <ProfilHeader userInfo={userInfo}/>
-        
+        <PostList posts={userPosts}/>
       </main>
   );
 }
