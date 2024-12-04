@@ -16,7 +16,7 @@ import {useMemo, useState} from "react";
 import {useSession} from "next-auth/react";
 import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
 
-export default function PostModal() {
+export default function CreatePostButton() {
   const {data: session} = useSession();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [content, setContent] = useState("");
@@ -78,7 +78,7 @@ export default function PostModal() {
   
   return (
     <div className={"flex justify-center items-center"}>
-      <button className={"w-7"} onClick={onOpen}><PlusIcon/></button>
+      <button className={""} onClick={onOpen}><PlusIcon className={"fill-zinc-50"}/></button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
         <ModalContent>
           {(onClose) => (
