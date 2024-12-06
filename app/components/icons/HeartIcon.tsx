@@ -1,6 +1,6 @@
 
 
-export default function HeartIcon({className}: Readonly<{ className: string }>) {
+export default function HeartIcon({className}: Readonly<{ className?: string }>) {
   return (
     <svg className={className} viewBox="0 0 24 24" stroke="currentColor" >
       <path

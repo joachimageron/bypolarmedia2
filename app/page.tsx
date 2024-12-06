@@ -30,23 +30,27 @@ export default function Home() {
   
   return (
       <div>
+        {data?.user ? (
+          <div className={"mt-20 text-center"}>
+            feed
+          </div>
+        ) : (
+          <Card className="max-w-[200px] m-auto mt-20">
+            <CardHeader className="flex gap-3">
+              
+              <div className="flex flex-col">
+                <p className="text-md">Please sign in</p>
+              </div>
+            </CardHeader>
+            <Divider/>
+            <CardBody>
+              <Button onPress={() => router.push("auth/signin")}
+                      className="mt-3 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg">Connexion</Button>
+            </CardBody>
+          </Card>
+        )
+        }
         
-        <Card className="max-w-[200px] m-auto mt-20">
-          <CardHeader className="flex gap-3">
- 
-            <div className="flex flex-col">
-              <p className="text-md">bouttons de navigation</p>
-            </div>
-          </CardHeader>
-          <Divider/>
-          <CardBody>
-            {data?.user && <Button onPress={() => router.push(`profil/${data.user.userId}`)}
-                                   className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg">Profil
-               utilisateur</Button>}
-            <Button onPress={() => router.push("auth/signin")}
-                    className="mt-3 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg">Connexion</Button>
-          </CardBody>
-        </Card>
       </div>
   );
 }
