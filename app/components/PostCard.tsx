@@ -12,7 +12,7 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostByU
     <Card className="my-5">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
-          <Avatar isBordered radius="full" size="md" src={post.author.image ?? undefined}/>
+          <Avatar className={"z-0"} size="md" src={post.author.image ?? undefined}/>
           <div className="flex items-center justify-start">
             <h4 className="text-small font-semibold leading-none text-default-600">{post.author.name}</h4>
           </div>
