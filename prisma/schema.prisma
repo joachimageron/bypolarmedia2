@@ -22,6 +22,7 @@ model User {
   posts         Post[]
   comments      Comment[]
   likes         Like[]
+  dislikes      Dislike[]
   notifications Notification[]
   followers     Follower[]     @relation("UserFollowers")
   following     Follower[]     @relation("UserFollowing")
@@ -77,6 +78,7 @@ model Post {
   author   User          @relation(fields: [authorId], references: [id])
   comments Comment[]
   likes    Like[]
+  dislikes Dislike[]
   media    Media[]
   hashtags PostHashtag[]
 }
@@ -89,12 +91,25 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  post   Post   @relation(fields: [postId], references: [id])
-  author User   @relation(fields: [authorId], references: [id])
-  likes  Like[]
+  post     Post      @relation(fields: [postId], references: [id])
+  author   User      @relation(fields: [authorId], references: [id])
+  likes    Like[]
+  dislikes Dislike[]
 }
 
 model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String?
+  commentId String?
+  createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id])
+  post    Post?    @relation(fields: [postId], references: [id])
+  comment Comment? @relation(fields: [commentId], references: [id])
+}
+
+model Dislike {
   id        String   @id @default(cuid())
   userId    String
   postId    String?

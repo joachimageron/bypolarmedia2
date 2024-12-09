@@ -9,17 +9,9 @@ import {prisma} from "@/prisma/prisma";
  * Créer un nouvel utilisateur
  */
 /**
- * les utilisateurs sont créé par nextauth
+ * méthode non implémentée, car les utilisateurs sont créé par nextauth
  */
-// export async function createUser(data: {
-//   name?: string;
-//   email: string;
-//   image?: string;
-// }) {
-//   return await prisma.user.create({
-//     data,
-//   });
-// }
+
 
 /**
  * Savoir si un utilisateur existe
@@ -36,7 +28,7 @@ export async function userExists(id: string) {
  */
 export async function getUserById(userId: string | null){
   if (!userId) return null;
-  return await prisma.user.findUnique({
+  return prisma.user.findUnique({
     where: { id: userId },
     include: {
       followers: true,
@@ -49,7 +41,7 @@ export async function getUserById(userId: string | null){
  * Récupérer un utilisateur par son email
  */
 export async function getUserByEmail(email: string) {
-  return await prisma.user.findUnique({
+  return prisma.user.findUnique({
     where: { email },
     include: {
       posts: true,
@@ -68,7 +60,7 @@ export async function updateUser(userId: string, data: Partial<{
   description: string;
   image: string;
 }>) {
-  return await prisma.user.update({
+  return prisma.user.update({
     where: { id: userId },
     data,
   });
@@ -101,6 +93,7 @@ export async function getPostById(postId: string) {
       author: true,
       comments: true,
       likes: true,
+      dislikes: true,
       media: true,
       hashtags: {
         include: {
@@ -141,6 +134,7 @@ export async function getPostsByUser(userId: string) {
     include: {
       comments: true,
       likes: true,
+      dislikes: true,
       media: true,
       hashtags: {
         include: {
@@ -173,7 +167,7 @@ export async function addComment(data: {
  * Récupérer les commentaires d'une publication
  */
 export async function getCommentsByPost(postId: string) {
-  return await prisma.comment.findMany({
+  return prisma.comment.findMany({
     where: { postId },
     include: {
       author: true,
@@ -187,28 +181,64 @@ export async function getCommentsByPost(postId: string) {
 // ---------------------------
 
 /**
- * Aimer une publication
+ * handle like
  */
-export async function likePost(userId: string, postId: string) {
-  return await prisma.like.create({
-    data: {
-      userId,
-      postId,
-    },
-  });
-}
-
-/**
- * Retirer son like d'une publication
- */
-export async function unlikePost(userId: string, postId: string) {
-  return await prisma.like.deleteMany({
+export async function likeOrDislike(userId: string, postId: string) {
+  const like = await prisma.like.findFirst({
     where: {
       userId,
       postId,
     },
   });
+  if (like) {
+    await prisma.like.delete({
+      where: {
+        id: like.id,
+      },
+    });
+    return false;
+  } else {
+    return prisma.like.create({
+      data: {
+        userId,
+        postId,
+      },
+    });
+  }
 }
+
+
+// ---------------------------
+// Méthodes pour les Dislikes
+// ---------------------------
+
+/**
+ * handle dislike
+ */
+export async function dislikePost(userId: string, postId: string) {
+  const dislike = await prisma.dislike.findFirst({
+    where: {
+      userId,
+      postId,
+    },
+  });
+  if (dislike) {
+    await prisma.dislike.delete({
+      where: {
+        id: dislike.id,
+      },
+    });
+    return false;
+  } else {
+    return prisma.dislike.create({
+      data: {
+        userId,
+        postId,
+      },
+    });
+  }
+}
+
 
 // ---------------------------
 // Méthodes pour les Followers
@@ -218,7 +248,7 @@ export async function unlikePost(userId: string, postId: string) {
  * Suivre un utilisateur
  */
 export async function followUser(followerId: string, followingId: string) {
-  return await prisma.follower.create({
+  return prisma.follower.create({
     data: {
       followerId,
       followingId,
@@ -230,7 +260,7 @@ export async function followUser(followerId: string, followingId: string) {
  * Ne plus suivre un utilisateur
  */
 export async function unfollowUser(followerId: string, followingId: string) {
-  return await prisma.follower.deleteMany({
+  return prisma.follower.deleteMany({
     where: {
       followerId,
       followingId,
@@ -242,7 +272,7 @@ export async function unfollowUser(followerId: string, followingId: string) {
  * Récupérer les followers d'un utilisateur
  */
 export async function getFollowers(userId: string) {
-  return await prisma.follower.findMany({
+  return prisma.follower.findMany({
     where: { followingId: userId },
     include: {
       follower: true,
@@ -254,7 +284,7 @@ export async function getFollowers(userId: string) {
  * Récupérer les utilisateurs que suit un utilisateur
  */
 export async function getFollowing(userId: string) {
-  return await prisma.follower.findMany({
+  return prisma.follower.findMany({
     where: { followerId: userId },
     include: {
       following: true,
@@ -273,7 +303,7 @@ export async function createNotification(data: {
   userId: string;
   content: string;
 }) {
-  return await prisma.notification.create({
+  return prisma.notification.create({
     data,
   });
 }
@@ -282,7 +312,7 @@ export async function createNotification(data: {
  * Récupérer les notifications d'un utilisateur
  */
 export async function getNotificationsByUser(userId: string) {
-  return await prisma.notification.findMany({
+  return prisma.notification.findMany({
     where: { userId },
     orderBy: {
       createdAt: 'desc',
@@ -294,7 +324,7 @@ export async function getNotificationsByUser(userId: string) {
  * Marquer une notification comme lue
  */
 export async function markNotificationAsRead(notificationId: string) {
-  return await prisma.notification.update({
+  return prisma.notification.update({
     where: { id: notificationId },
     data: { isRead: true },
   });
@@ -308,7 +338,7 @@ export async function markNotificationAsRead(notificationId: string) {
  * Créer ou récupérer un hashtag
  */
 export async function upsertHashtag(name: string) {
-  return await prisma.hashtag.upsert({
+  return prisma.hashtag.upsert({
     where: { name },
     update: {},
     create: { name },
@@ -319,7 +349,7 @@ export async function upsertHashtag(name: string) {
  * Associer un hashtag à une publication
  */
 export async function addHashtagToPost(postId: string, hashtagId: string) {
-  return await prisma.postHashtag.create({
+  return prisma.postHashtag.create({
     data: {
       postId,
       hashtagId,
@@ -331,7 +361,7 @@ export async function addHashtagToPost(postId: string, hashtagId: string) {
  * Récupérer les publications associées à un hashtag
  */
 export async function getPostsByHashtag(name: string) {
-  return await prisma.post.findMany({
+  return prisma.post.findMany({
     where: {
       hashtags: {
         some: {
@@ -370,7 +400,7 @@ export async function addMediaToPost(data: {
  * Récupérer les médias d'une publication
  */
 export async function getMediaByPost(postId: string) {
-  return await prisma.media.findMany({
+  return prisma.media.findMany({
     where: { postId },
   });
 }

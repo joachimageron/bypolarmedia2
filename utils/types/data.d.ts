@@ -1,4 +1,4 @@
-import {Post, Like, Media, PostHashtag, User, Follower, Comment} from '@prisma/client'; // Import de Prisma pour les types
+import {Post, Like, Dislike, Media, PostHashtag, User, Follower, Comment} from '@prisma/client'; // Import de Prisma pour les types
 
 
 export type getUserById = {
@@ -11,6 +11,7 @@ export type getUserById = {
 export type getPostsByUser = (Post & {
   comments: Comment[];
   likes: Like[];
+  dislikes: Dislike[];
   media: Media[];
   hashtags: (PostHashtag & {
     hashtag: Hashtag;
@@ -21,6 +22,7 @@ export type getPostsByUser = (Post & {
 export type PostByUser = (Post & {
   comments: Comment[];
   likes: Like[];
+  dislikes: Dislike[];
   media: Media[];
   hashtags: (PostHashtag & {
     hashtag: Hashtag;
