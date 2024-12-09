@@ -1,8 +1,8 @@
-import {getPostsByUser} from "@/utils/types/data";
-import PostCard from "@/app/components/PostCard";
+import {PostsByUser} from "@/utils/types/data";
+import PostCard from "@/app/components/posts/PostCard";
 
 
-export const PostList = ({posts}: { posts: getPostsByUser }) => {
+export const PostList = ({posts}: { posts: PostsByUser }) => {
   return (
     <ul>
       {posts.map((post) => (

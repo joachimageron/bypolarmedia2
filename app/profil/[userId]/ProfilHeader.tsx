@@ -1,10 +1,10 @@
 "use client";
-import {getUserById} from "@/utils/types/data";
+import {UserById} from "@/utils/types/data";
 import {Button, Image} from "@nextui-org/react";
 
 
 
-export default function ProfilHeader({userInfo}: Readonly<getUserById>) {
+export default function ProfilHeader({userInfo}: Readonly<UserById>) {
   return (
     <section className={""}>
       <Image isBlurred className={""} src={userInfo?.bgImage ?? undefined} alt={"background image of the user"}/>

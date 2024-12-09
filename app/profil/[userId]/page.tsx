@@ -1,7 +1,7 @@
 import {getPostsByUser, getUserById, userExists} from "@/utils/data";
 import {notFound} from "next/navigation";
 import ProfilHeader from "@/app/profil/[userId]/ProfilHeader";
-import {PostList} from "@/app/components/PostList";
+import {PostList} from "@/app/components/posts/PostList";
 import {Divider} from "@nextui-org/react";
 
 interface ProfilePageProps {

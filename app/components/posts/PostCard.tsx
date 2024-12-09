@@ -1,19 +1,22 @@
 'use client'
-import {Card, CardHeader, CardBody, CardFooter, Avatar, Button, Divider, Image} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Avatar, Divider, Image, useDisclosure} from "@nextui-org/react";
 import {useState} from "react";
 import {PostByUser} from "@/utils/types/data";
 import HeartIcon from "@/app/components/icons/HeartIcon";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
 import {dislikePost, likeOrDislike} from "@/utils/data";
+import PostModal from "@/app/components/posts/PostModal";
+import FollowButton from "@/app/components/FollowButton";
 
 export default function PostCard({post, displayFollow}: Readonly<{ post: PostByUser, displayFollow: boolean }>) {
-  const [isFollowed, setIsFollowed] = useState(false);
   
   const [isLiked, setIsLiked] = useState(!!post.likes.find(like => like.userId === post.author.id));
   const [likeCount, setLikeCount] = useState(post.likes.length);
   
   const [isDisliked, setIsDisliked] = useState(false);
   const [dislikeCount, setDislikeCount] = useState(post.dislikes.length);
+  
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   
   const handleLike = async () => {
     const liked = await likeOrDislike(post.author.id, post.id)
@@ -31,7 +34,6 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostByU
     console.log("is disliked", !!disliked)
   }
   
-  console.log(post)
   return (
     <Card className="my-5">
       <CardHeader className="justify-between">
@@ -42,16 +44,7 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostByU
           </div>
         </div>
         {displayFollow && (
-          <Button
-            className={isFollowed ? "bg-transparent text-foreground border-default-200" : ""}
-            color="primary"
-            radius="full"
-            size="sm"
-            variant={isFollowed ? "bordered" : "solid"}
-            onPress={() => setIsFollowed(!isFollowed)}
-          >
-            {isFollowed ? "Unfollow" : "Follow"}
-          </Button>
+          <FollowButton/>
         )
         }
       
@@ -67,22 +60,30 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostByU
           alt={"image post"}
           className={"mt-5"}
           width={1000}
-          classNames={{ wrapper: "min-h-72" }}
+          classNames={{wrapper: "min-h-72"}}
         />
       </CardBody>
       <Divider className={""}/>
-      <CardFooter className="gap-3">
-        <div className="flex gap-2">
-          <p className="font-semibold text-small">{likeCount}</p>
-          <button onClick={()=>handleLike()}>
-            <HeartIcon className={isLiked ? "w-5 fill-danger text-danger" : "w-5 fill-white text-white"}/>
-          </button>
+      <CardFooter className="flex-col items-start gap-2">
+        <div className="flex gap-3">
+          <div className="flex gap-2">
+            <p className="font-semibold text-small">{likeCount}</p>
+            <button onClick={() => handleLike()}>
+              <HeartIcon className={isLiked ? "w-5 fill-danger text-danger" : "w-5 fill-default-900 text-default-900"}/>
+            </button>
+          </div>
+          <div className="flex gap-2">
+            <p className="font-semibold text-small">{dislikeCount}</p>
+            <button onClick={() => handleDislike()}>
+              <ThumbDownIcon className={isDisliked ? "w-5 fill-primary" : "w-5 fill-default-900"}/>
+            </button>
+          </div>
         </div>
-        <div className="flex gap-1">
-          <p className="font-semibold text-small">{dislikeCount}</p>
-          <button onClick={()=>handleDislike()}>
-            <ThumbDownIcon className={isDisliked ? "w-5 fill-primary" : "w-5 fill-white"}/>
+        <div className="">
+          <button onClick={()=> onOpen()} className={"flex gap-1 text-small text-default-500 underline"}>
+            <p className="">{post._count.comments} comments</p>
           </button>
+          <PostModal isOpen={isOpen} onOpenChange={onOpenChange} post={post} displayFollow={true}/>
         </div>
       </CardFooter>
     </Card>

@@ -132,7 +132,11 @@ export async function getPostsByUser(userId: string) {
       createdAt: 'desc',
     },
     include: {
-      comments: true,
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
       likes: true,
       dislikes: true,
       media: true,
@@ -158,8 +162,13 @@ export async function addComment(data: {
   authorId: string;
   content: string;
 }) {
+  if (!data.content || !data.postId || !data.authorId ) return false;
   return prisma.comment.create({
     data,
+    include: {
+      author: true,
+      likes: true,
+    }
   });
 }
 
