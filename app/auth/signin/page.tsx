@@ -1,29 +1,22 @@
-import {serverSession} from "@/utils/auth";
-import {permanentRedirect} from "next/navigation";
-import {SignInButton, SignOutButton} from "@/app/components/AuthButton";
+'use client'
+import {SignInButtonGitHub} from "@/app/components/AuthButton";
+import { Card, CardBody, CardHeader, Divider} from "@nextui-org/react";
 
-export default async function Signin() {
-  // Récupérer la session utilisateur
-  const session = await serverSession();
-  
+export default function Signin() {
 
-  
-  if (session?.user) {
-    
-    permanentRedirect("/");
-  }
-  
-  // Rendre les enfants si aucune redirection n'a eu lieu
   return (
-    <div>
-      <h1>Sign in</h1>
-      <p>session :</p>
-      <p>email :</p>
-      <p>{session?.user?.email}</p>
-      <p>user id</p>
-      <p>{session?.user?.userId}</p>
-      <SignInButton/>
-      <SignOutButton/>
-    </div>
+      <Card className="max-w-[200px] m-auto mt-20">
+        <CardHeader className="flex gap-3">
+          
+          <div className="flex flex-col">
+            <p className="text-md">Sign in page</p>
+          </div>
+        </CardHeader>
+        <Divider/>
+        <CardBody>
+          <SignInButtonGitHub>S&#39;inscrire avec GitHub</SignInButtonGitHub>
+        </CardBody>
+      </Card>
+
   )
 }

@@ -4,32 +4,12 @@ import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 
 export default function Home() {
-  
-  // const { showNotification } = useNotificationModal();
-  //
-  // const handleSuccess = () => {
-  //   showNotification('success', 'Succès', 'Opération réussie avec succès.');
-  // };
-  //
-  // const handleError = () => {
-  //   showNotification('error', 'Erreur', 'Une erreur est survenue lors de l\'opération.');
-  //   setTimeout(() => {
-  //
-  //   showNotification('info', 'Information', 'Ceci est une notification d\'information.');
-  //   }, 1000);
-  // };
-  //
-  // const handleInfo = () => {
-  //   showNotification('info', 'Information', 'Ceci est une notification d\'information.');
-  //
-  // };
-  
   const {data} = useSession();
   const router = useRouter();
-  console.log(data);
   
+
   return (
-      <div>
+      <main>
         {data?.user ? (
           <div className={"mt-20 text-center"}>
             feed
@@ -51,6 +31,6 @@ export default function Home() {
         )
         }
         
-      </div>
+      </main>
   );
 }
