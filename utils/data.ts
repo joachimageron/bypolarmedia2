@@ -168,6 +168,7 @@ export async function addComment(data: {
     include: {
       author: true,
       likes: true,
+      dislikes: true,
     }
   });
 }
@@ -181,6 +182,7 @@ export async function getCommentsByPost(postId: string) {
     include: {
       author: true,
       likes: true,
+      dislikes: true,
     },
   });
 }
@@ -190,9 +192,9 @@ export async function getCommentsByPost(postId: string) {
 // ---------------------------
 
 /**
- * handle like
+ * handle like or unlike post
  */
-export async function likeOrDislike(userId: string, postId: string) {
+export async function likeOrDislikePost(userId: string, postId: string) {
   const like = await prisma.like.findFirst({
     where: {
       userId,
@@ -216,15 +218,42 @@ export async function likeOrDislike(userId: string, postId: string) {
   }
 }
 
+/**
+ * handle like or unlike comment
+ */
+export async function likeOrDislikeComment(userId: string, commentId: string) {
+  const like = await prisma.like.findFirst({
+    where: {
+      userId,
+      commentId,
+    },
+  });
+  if (like) {
+    await prisma.like.delete({
+      where: {
+        id: like.id,
+      },
+    });
+    return false;
+  } else {
+    return prisma.like.create({
+      data: {
+        userId,
+        commentId,
+      },
+    });
+  }
+}
+
 
 // ---------------------------
 // Méthodes pour les Dislikes
 // ---------------------------
 
 /**
- * handle dislike
+ * handle dislike or undislike post
  */
-export async function dislikePost(userId: string, postId: string) {
+export async function dislikeOrUndislikePost(userId: string, postId: string) {
   const dislike = await prisma.dislike.findFirst({
     where: {
       userId,
@@ -243,6 +272,33 @@ export async function dislikePost(userId: string, postId: string) {
       data: {
         userId,
         postId,
+      },
+    });
+  }
+}
+
+/**
+ * handle dislike or undislike comment
+ */
+export async function dislikeOrUndislikeComment(userId: string, commentId: string) {
+  const dislike = await prisma.dislike.findFirst({
+    where: {
+      userId,
+      commentId,
+    },
+  });
+  if (dislike) {
+    await prisma.dislike.delete({
+      where: {
+        id: dislike.id,
+      },
+    });
+    return false;
+  } else {
+    return prisma.dislike.create({
+      data: {
+        userId,
+        commentId,
       },
     });
   }

@@ -39,7 +39,7 @@ export default async function NavigationBar() {
         }
       </div>
       
-      <div className={"absolute right-0"}>
+      <div className={"absolute right-5"}>
         <DarkModeSwitch/>
       </div>
     </nav>

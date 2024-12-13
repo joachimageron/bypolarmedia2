@@ -21,6 +21,7 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
   const userInfo = await getUserById(userId)
   const userPosts = await getPostsByUser(userId)
   
+  console.log(userPosts)
   
   // console.log(userInfo)
   return (

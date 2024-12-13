@@ -2,27 +2,15 @@ import {serverSession} from "@/utils/auth";
 import {permanentRedirect} from "next/navigation";
 import {SignInButton, SignOutButton} from "@/app/components/AuthButton";
 
-
-type Params = Promise<{ [key: string]: string }>;
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
-
-export default async function Template({
-  searchParams,
-}: Readonly<{
-  children: React.ReactNode;
-  params: Params;
-  searchParams: SearchParams;
-}>) {
+export default async function Signin() {
   // Récupérer la session utilisateur
   const session = await serverSession();
   
-  // Résoudre les Promises params et searchParams
-  const resolvedSearchParams = await searchParams;
+
   
-  if (session?.user && typeof resolvedSearchParams.callbackUrl === "string") {
-    const url = new URL(resolvedSearchParams.callbackUrl);
-    const path = url.pathname;
-    permanentRedirect(path);
+  if (session?.user) {
+    
+    permanentRedirect("/");
   }
   
   // Rendre les enfants si aucune redirection n'a eu lieu

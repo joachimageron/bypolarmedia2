@@ -43,19 +43,22 @@ export default function CreatePostButton() {
     })
     if (!postCreated) {
       console.error("Error creating post");
+      setIsPosting(false);
+      notification.showNotification("error", "Post creation failed", "An error occurred while creating your post");
       return
     }
     
-    const mediaCreated = await addMediaToPost({
-      postId: postCreated.id,
-      type: "image",
-      url: imageUrl,
-    });
-    
-    if (!mediaCreated) {
-      return;
+    if (imageUrl){
+      const mediaCreated = await addMediaToPost({
+        postId: postCreated.id,
+        type: "image",
+        url: imageUrl,
+      });
+      if (!mediaCreated) {
+        return;
+      }
+      console.log("Media created", mediaCreated);
     }
-    console.log("Media created", mediaCreated);
     onOpenChange()
     setIsPosting(false);
     notification.showNotification("success", "Post created", "Your post has been created successfully");
