@@ -2,7 +2,7 @@ import {
   Modal,
   ModalContent,
   ModalHeader,
-  ModalBody, Avatar, Image, Input, Button,
+  ModalBody, Avatar, Image, Input, Button, Divider,
 } from "@nextui-org/react";
 import {CommentsByPost, PostByUser} from "@/utils/types/data";
 import {addComment, getCommentsByPost} from "@/utils/data";
@@ -51,7 +51,7 @@ export default function PostModal({isOpen, onOpenChange, post, displayFollow}: R
   }
   
   return (
-    <Modal size={"5xl"} isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal size={"5xl"} isOpen={isOpen} onOpenChange={onOpenChange} className={"h-[90vh]"}>
       <ModalContent>
         {() => (
           <>
@@ -65,23 +65,25 @@ export default function PostModal({isOpen, onOpenChange, post, displayFollow}: R
               )
               }
             </ModalHeader>
-            <ModalBody className={"flex-row"}>
-              <div className={"w-1/2"}>
-                <p>
+            <Divider/>
+            <ModalBody className={"flex flex-row gap-0 p-0"}>
+              <div className={"w-4/5 h-fit"}>
+                <p className={"py-4 px-6"}>
                   {post.content}
                 </p>
                 <Image
                   src={post.media[0].url}
                   fallbackSrc={"https://agriallier.fr/wp-content/uploads/2018/09/image-drole-pour-fond-d-e%CC%81cran-vache-et-homme-fond-d-e%CC%81cran-ordinateur-fond-d-e%CC%81cran-drole-image.jpg"}
                   alt={"image post"}
-                  className={"mt-5"}
+                  className={"mt-5 rounded-none"}
+                  classNames={{wrapper: "min-h-72", img: "mt-0"}}
                   width={1000}
-                  classNames={{wrapper: "min-h-72"}}
                 />
               </div>
-              <div>
+              <Divider orientation={"vertical"} />
+              <div className={"py-4 px-6 flex flex-col h-full w-2/5"}>
                 <h4 className="text-small font-semibold leading-none text-default-600">Comments</h4>
-                <ul>
+                <ul className={"overflow-y-scroll h-full py-4"}>
                   {comments?.map((comment) => (
                     <li key={comment.id}>
                       <Avatar size="sm" src={comment.author.image ?? undefined}/>
@@ -93,10 +95,10 @@ export default function PostModal({isOpen, onOpenChange, post, displayFollow}: R
                   <Input
                     value={commentContent}
                     onValueChange={setCommentContent}
-                    label={"Comment"}
-                    className={"w-full h-12"}
+                    placeholder={"Write a comment"}
+                    className={"w-full "}
                   />
-                  <Button isLoading={commentLoading} onPress={()=>handleComment()} className={"h-12"}>Comment</Button>
+                  <Button color={"primary"} isLoading={commentLoading} onPress={()=>handleComment()} className={""}>Comment</Button>
                 </div>
               </div>
             </ModalBody>
