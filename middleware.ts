@@ -15,20 +15,18 @@ export async function middleware(req: NextRequest,) {
     }
   }
   
-  if (pathname.startsWith('/profil/')) {
+  if (pathname.startsWith('/profil/') || pathname === '/') {
     const token = await getToken({req, secret: process.env.SECRET});
     if (!token) {
       console.log('redirecting to /auth/signin')
       return NextResponse.redirect( new URL('/auth/signin', req.nextUrl));
     }
   }
-  
-  
   return NextResponse.next()
   
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/profil/:path*', "/auth/signin/:path*"],
+  matcher: ['/profil/:path*', "/auth/signin/:path*", "/"],
 }
