@@ -16,8 +16,10 @@ import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
 import {dislikeOrUndislikePost, likeOrDislikePost} from "@/utils/data";
 import CommentSection from "@/app/components/posts/CommentSection";
 import FollowButton from "@/app/components/FollowButton";
+import {useSession} from "next-auth/react";
 
-export default function PostCard({post, displayFollow}: Readonly<{ post: PostByUser, displayFollow: boolean }>) {
+export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
+  const {data} = useSession()
   
   const [isLiked, setIsLiked] = useState(!!post.likes.find(like => like.userId === post.author.id));
   const [likeCount, setLikeCount] = useState(post.likes.length);
@@ -52,7 +54,7 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostByU
             <h4 className="text-small font-semibold leading-none text-default-600">{post.author.name}</h4>
           </div>
         </div>
-        {displayFollow && (
+        {data?.user.userId !== post.author.id && (
           <FollowButton/>
         )
         }

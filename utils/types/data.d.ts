@@ -8,7 +8,7 @@ export type UserById = {
   } & User | null
 }
 
-export type PostsByUser = (Post & {
+export type PostList = (Post & {
   likes: Like[];
   dislikes: Dislike[];
   media: Media[];

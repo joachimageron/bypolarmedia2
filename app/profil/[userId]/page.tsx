@@ -1,7 +1,7 @@
-import {getPostsByUser, getUserById, userExists} from "@/utils/data";
+import {getUserById, userExists} from "@/utils/data";
 import {notFound} from "next/navigation";
 import ProfilHeader from "@/app/profil/[userId]/ProfilHeader";
-import {PostList} from "@/app/components/posts/PostList";
+import {PostContainer} from "@/app/components/posts/PostContainer";
 import {Divider} from "@nextui-org/react";
 
 interface ProfilePageProps {
@@ -19,7 +19,6 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
     if (!userExist) notFound()
   }
   const userInfo = await getUserById(userId)
-  const userPosts = await getPostsByUser(userId)
   
   // console.log(userInfo)
   return (
@@ -28,7 +27,7 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
         <Divider className={"my-2"}/>
         <h2 className={"text-center font-bold"}>Posts</h2>
         <Divider className="my-2"/>
-        <PostList posts={userPosts}/>
+        <PostContainer/>
       </main>
   );
 }

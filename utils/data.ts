@@ -109,15 +109,26 @@ export async function getPostById(postId: string) {
  */
 export async function getAllPosts(skip: number = 0, take: number = 10) {
   return prisma.post.findMany({
-    skip,
-    take,
+    skip: skip,
+    take: take,
     orderBy: {
       createdAt: 'desc',
     },
     include: {
-      author: true,
-      comments: true,
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
       likes: true,
+      dislikes: true,
+      media: true,
+      hashtags: {
+        include: {
+          hashtag: true,
+        },
+      },
+      author: true,
     },
   });
 }
