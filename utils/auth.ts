@@ -2,13 +2,17 @@ import NextAuth, {getServerSession, NextAuthOptions} from "next-auth"
 import {PrismaAdapter} from "@auth/prisma-adapter"
 import {prisma} from "@/prisma/prisma"
 import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 
 const githubId = process.env.GITHUB_ID;
 const githubSecret = process.env.GITHUB_SECRET;
-if (typeof githubId === "undefined" || typeof githubSecret === "undefined") {
+const googleId = process.env.GOOGLE_ID;
+const googleSecret = process.env.GOOGLE_SECRET;
+
+if (typeof githubId === "undefined" || typeof githubSecret === "undefined" || typeof googleId === "undefined" || typeof googleSecret === "undefined") {
   
   throw new Error(
-    `Missing GITHUB_ID and GITHUB_SECRET environment variables ${githubId} ${githubSecret}`
+    `Missing GITHUB_ID, GITHUB_SECRET, GOOGLE_ID or GOOGLE_SECRET environment variables`
   );
 }
 
@@ -18,6 +22,10 @@ const authOptions: NextAuthOptions = {
         clientId: githubId,
         clientSecret: githubSecret,
       }),
+      GoogleProvider({
+        clientId: googleId,
+        clientSecret: googleSecret,
+      })
     ],
   adapter: PrismaAdapter(prisma),
   session: {

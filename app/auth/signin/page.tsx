@@ -1,5 +1,5 @@
 'use client'
-import {SignInButtonGitHub} from "@/app/components/AuthButton";
+import {SignInButtonGitHub, SignInButtonGoogle} from "@/app/components/AuthButton";
 import { Card, CardBody, CardHeader, Divider} from "@nextui-org/react";
 
 export default function Signin() {
@@ -13,8 +13,9 @@ export default function Signin() {
           </div>
         </CardHeader>
         <Divider/>
-        <CardBody>
-          <SignInButtonGitHub>S&#39;inscrire avec GitHub</SignInButtonGitHub>
+        <CardBody className={"flex-col gap-3"}>
+          <SignInButtonGitHub>Log in with git hub</SignInButtonGitHub>
+          <SignInButtonGoogle>Login with google</SignInButtonGoogle>
         </CardBody>
       </Card>
 

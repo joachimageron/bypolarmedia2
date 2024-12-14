@@ -9,6 +9,12 @@ export function SignInButtonGitHub({children}: Readonly<{children: React.ReactNo
   );
 }
 
+export function SignInButtonGoogle({children}: Readonly<{children: React.ReactNode;}>) {
+  return (
+    <Button onPress={() => signIn("google")}>{children}</Button>
+  );
+}
+
 export function SignOutButton(){
   const session = useSession()
   console.log(session)
