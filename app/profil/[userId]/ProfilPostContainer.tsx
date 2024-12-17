@@ -1,10 +1,10 @@
 "use client";
 import {PostContainer} from "@/app/components/posts/PostContainer";
 import {useEffect, useRef, useState} from "react";
-import {PostList} from "@/utils/types/data";
-import {getAllPosts} from "@/utils/data";
+import {PostList, UserById} from "@/utils/types/data";
+import {getPostsByUser} from "@/utils/data";
 
-export default function Home() {
+export default function ProfilPostContainer({userInfo}: Readonly<UserById>) {
   
   const [posts, setPosts] = useState<PostList>([]);
   const skip = useRef(0);
@@ -14,7 +14,7 @@ export default function Home() {
   const loadPosts = async () => {
     if (isLoading || isLoading === "loaded") return; // empêche d'appeler plusieurs fois lors de l'arrivé en bas
     setIsLoading(true);
-    const newPosts = await getAllPosts(skip.current, take);
+    const newPosts = await getPostsByUser(userInfo?.id ?? "", skip.current, take);
     if (newPosts.length === 0) {
       setIsLoading("loaded");
       return;

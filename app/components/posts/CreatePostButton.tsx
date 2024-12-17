@@ -61,7 +61,7 @@ export default function CreatePostButton() {
     }
     onOpenChange()
     setIsPosting(false);
-    notification.showNotification("success", "Post created", "Your post has been created successfully");
+    notification.showNotification("success", "Post created", "Your post will appear on the feed soon");
     
   }
   

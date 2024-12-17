@@ -136,9 +136,11 @@ export async function getAllPosts(skip: number = 0, take: number = 10) {
 /**
  * Récupérer toutes les publications d'un utilisateur
  */
-export async function getPostsByUser(userId: string) {
+export async function getPostsByUser(userId: string, skip: number = 0, take: number = 10) {
   return prisma.post.findMany({
     where: { authorId: userId },
+    skip: skip,
+    take: take,
     orderBy: {
       createdAt: 'desc',
     },

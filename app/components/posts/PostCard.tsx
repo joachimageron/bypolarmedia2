@@ -30,6 +30,8 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
   
   const [commentOpen, setCommentOpen] = useState(false)
   
+  const [errorLoadingImage, setErrorLoadingImage] = useState(false)
+  
   const handleLike = async () => {
     const liked = await likeOrDislikePost(post.author.id, post.id)
     setIsLiked(!!liked)
@@ -74,12 +76,18 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
         {post.media.length > 0 && (
           <Image
             src={post.media[0].url ?? undefined}
-            fallbackSrc={"https://agriallier.fr/wp-content/uploads/2018/09/image-drole-pour-fond-d-e%CC%81cran-vache-et-homme-fond-d-e%CC%81cran-ordinateur-fond-d-e%CC%81cran-drole-image.jpg"}
+            onError={() => setErrorLoadingImage(true)}
             alt={"image post"}
             className={"mt-5 rounded-none"}
             width={1000}
             classNames={{wrapper: "min-h-72 rounded-none", img: "mt-0"}}
           />
+        )}
+        
+        {errorLoadingImage && (
+          <p className="p-4 text-small text-center text-default-500">
+            Error loading image
+          </p>
         )}
         
       </CardBody>

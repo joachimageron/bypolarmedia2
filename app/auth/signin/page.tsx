@@ -14,8 +14,8 @@ export default function Signin() {
         </CardHeader>
         <Divider/>
         <CardBody className={"flex-col gap-3"}>
-          <SignInButtonGitHub>Log in with git hub</SignInButtonGitHub>
-          <SignInButtonGoogle>Login with google</SignInButtonGoogle>
+          <SignInButtonGitHub>Log in GitHub</SignInButtonGitHub>
+          <SignInButtonGoogle>Login with Google</SignInButtonGoogle>
         </CardBody>
       </Card>
 

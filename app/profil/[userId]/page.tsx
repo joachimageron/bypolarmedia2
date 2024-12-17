@@ -3,6 +3,7 @@ import {notFound} from "next/navigation";
 import ProfilHeader from "@/app/profil/[userId]/ProfilHeader";
 import {PostContainer} from "@/app/components/posts/PostContainer";
 import {Divider} from "@nextui-org/react";
+import ProfilPostContainer from "@/app/profil/[userId]/ProfilPostContainer";
 
 interface ProfilePageProps {
   params: { userId: string }; // TypeScript : définissez le type des paramètres
@@ -27,7 +28,7 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
         <Divider className={"my-2"}/>
         <h2 className={"text-center font-bold"}>Posts</h2>
         <Divider className="my-2"/>
-        <PostContainer/>
+        <ProfilPostContainer userInfo={userInfo}/>
       </main>
   );
 }

@@ -16,20 +16,16 @@ import {useSession} from "next-auth/react";
 import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
 
 export default function EditProfilButton({
-  name,
   description,
   imageUrl,
   backgroundUrl,
-  setName,
   setDescription,
   setImageUrl,
   setBackgroundUrl,
 }: {
-  name: string | undefined,
   description: string | undefined,
   imageUrl: string | undefined,
   backgroundUrl: string | undefined,
-  setName: (name: string | undefined) => void,
   setDescription: (description: string | undefined) => void,
   setImageUrl: (imageUrl: string | undefined) => void,
   setBackgroundUrl: (backgroundUrl: string | undefined) => void,
@@ -43,7 +39,6 @@ export default function EditProfilButton({
   
   useEffect(() => {
     if (session?.user) {
-      setName(session?.user.name ?? undefined);
       setImageUrl(session?.user.image ?? "");
       getUserById(session?.user.userId).then(user => {
         if (user) {
@@ -59,13 +54,11 @@ export default function EditProfilButton({
     if (!session?.user.userId) return;
     // Update profil
     const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const name = formData.get("name");
     const description = formData.get("description");
     const image = formData.get("image");
     const bgImage = formData.get("bgImage");
     
     const data = {
-      name: name ? name.toString() : undefined,
       description: description ? description.toString() : undefined,
       image: image ? image.toString() : undefined,
       bgImage: bgImage ? bgImage.toString() : undefined,
@@ -76,7 +69,6 @@ export default function EditProfilButton({
     const res = await updateUser(session?.user.userId, data);
 
     if (res) {
-      setName(res.name ?? undefined);
       setImageUrl(res.image ?? undefined);
       setDescription(res.description ?? undefined);
       setBackgroundUrl(res.bgImage ?? undefined);
@@ -115,14 +107,6 @@ export default function EditProfilButton({
               <ModalHeader className="flex flex-col gap-1">Edit profil</ModalHeader>
               <Form onSubmit={handleUpdate}>
                 <ModalBody className={"w-full"}>
-                  <Input
-                    name={"name"}
-                    variant={"bordered"}
-                    label={"name"}
-                    placeholder={"Your name"}
-                    className={"w-full"}
-                    defaultValue={session?.user?.name ?? undefined}
-                  />
                   <Textarea
                     name={"description"}
                     variant="bordered"

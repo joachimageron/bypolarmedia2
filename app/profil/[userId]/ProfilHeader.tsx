@@ -9,7 +9,7 @@ import {useState} from "react";
 export default function ProfilHeader({userInfo}: Readonly<UserById>) {
   const {data: session} = useSession();
   
-  const [name, setName] = useState(userInfo?.name ?? undefined);
+  const [name] = useState(userInfo?.name ?? undefined);
   const [description, setDescription] = useState<string | undefined>(userInfo?.description ?? undefined);
   const [imageUrl, setImageUrl] = useState(userInfo?.image ?? undefined);
   const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>(userInfo?.bgImage ?? undefined);
@@ -24,11 +24,9 @@ export default function ProfilHeader({userInfo}: Readonly<UserById>) {
           <Image className={"rounded-full w-28"} src={imageUrl} alt={"profile picture"}/>
           {session?.user.userId === userInfo?.id &&
              <EditProfilButton
-                name={name}
                 description={description}
                 imageUrl={imageUrl}
                 backgroundUrl={backgroundUrl}
-                setName={setName}
                 setDescription={setDescription}
                 setImageUrl={setImageUrl}
                 setBackgroundUrl={setBackgroundUrl}
