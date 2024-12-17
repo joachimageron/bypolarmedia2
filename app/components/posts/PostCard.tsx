@@ -17,6 +17,7 @@ import {dislikeOrUndislikePost, likeOrDislikePost} from "@/utils/data";
 import CommentSection from "@/app/components/posts/CommentSection";
 import FollowButton from "@/app/components/FollowButton";
 import {useSession} from "next-auth/react";
+import Link from "next/link";
 
 export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
   const {data} = useSession()
@@ -48,12 +49,12 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
   return (
     <Card className="my-5">
       <CardHeader className="justify-between">
-        <div className="flex gap-3">
+        <Link href={`/profil/${post.authorId}`} className="flex gap-3">
           <Avatar className={"z-0"} size="md" src={post.author.image ?? undefined}/>
           <div className="flex items-center justify-start">
             <h4 className="text-small font-semibold leading-none text-default-600">{post.author.name}</h4>
           </div>
-        </div>
+        </Link>
         {data?.user.userId !== post.author.id && (
           <FollowButton/>
         )

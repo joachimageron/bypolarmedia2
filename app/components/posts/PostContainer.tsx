@@ -11,12 +11,16 @@ export const PostContainer = () => {
   const [posts, setPosts] = useState<PostList>([]);
   const skip = useRef(0);
   const take = 10;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState <boolean | string>(false);
   
   const loadPosts = async () => {
-    if (isLoading) return; // empêche d'appeler plusieurs fois lors de l'arrivé en bas
+    if (isLoading || isLoading === "loaded") return; // empêche d'appeler plusieurs fois lors de l'arrivé en bas
     setIsLoading(true);
     const newPosts = await getAllPosts(skip.current, take);
+    if (newPosts.length === 0) {
+      setIsLoading("loaded");
+      return;
+    }
     setPosts((prev) => [...prev, ...newPosts]);
     skip.current += newPosts.length;
     setIsLoading(false);
@@ -61,9 +65,15 @@ export const PostContainer = () => {
         ))}
       </ul>
       
-      {isLoading &&
+      {isLoading === true &&
          <div className={"w-full flex flex-col items-center"}>
             <Spinner className={"mt-3"}/>
+         </div>
+      }
+      
+      {isLoading === "loaded" &&
+         <div className={"w-full flex flex-col items-center"}>
+            <p className={"mt-3 text-default-500"}>No more posts to show</p>
          </div>
       }
     
