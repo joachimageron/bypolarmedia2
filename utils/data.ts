@@ -55,10 +55,10 @@ export async function getUserByEmail(email: string) {
  * Mettre à jour les informations d'un utilisateur
  */
 export async function updateUser(userId: string, data: Partial<{
-  name: string;
-  email: string;
-  description: string;
-  image: string;
+  name?: string;
+  description?: string;
+  image?: string;
+  bgImage?: string;
 }>) {
   return prisma.user.update({
     where: { id: userId },
