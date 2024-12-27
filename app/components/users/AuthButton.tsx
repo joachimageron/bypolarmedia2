@@ -1,5 +1,5 @@
 "use client";
-import {signIn, signOut, useSession} from "next-auth/react";
+import {signIn, signOut} from "next-auth/react";
 import {Button} from "@nextui-org/button";
 
 
@@ -16,8 +16,6 @@ export function SignInButtonGoogle({children}: Readonly<{children: React.ReactNo
 }
 
 export function SignOutButton(){
-  const session = useSession()
-  console.log(session)
   return (
     <Button onPress={() => signOut()}>Sign out</Button>
   );

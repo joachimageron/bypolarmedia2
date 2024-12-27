@@ -19,7 +19,6 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
   const [imageUrl, setImageUrl] = useState(userInfo?.image ?? undefined);
   const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>(userInfo?.bgImage ?? undefined);
   
-  console.log("user info :",userInfo)
   return (
     <section className={"mt-5"}>
       {backgroundUrl === "" && <div className={"mt-10"}/>}
@@ -53,14 +52,14 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
         <h1 className={"text-xl font-bold mt-5"}>{name}</h1>
         <p>{description}</p>
         <div className={"flex justify-start gap-5 mt-5"}>
-          <div className={"flex gap-2"}>
+          <button className={"flex gap-2"}>
             <p className={"font-bold"}>{userInfo?.followers.length}</p>
             <p>followers</p>
-          </div>
-          <div className={"flex gap-2"}>
+          </button>
+          <button className={"flex gap-2"}>
             <p className={"font-bold"}>{userInfo?.following.length}</p>
             <p>following</p>
-          </div>
+          </button>
         </div>
       </div>
     </section>

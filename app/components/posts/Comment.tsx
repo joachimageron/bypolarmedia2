@@ -1,10 +1,10 @@
 import {CommentByPost} from "@/utils/types/data";
 import {Avatar} from "@nextui-org/react";
 import Link from "next/link";
-import HeartIcon from "@/app/components/icons/HeartIcon";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
 import {useState} from "react";
 import {toggleDislikeComment, toggleLikeComment} from "@/utils/data";
+import ThumbUpIcon from "@/app/components/icons/ThumbUpIcon";
 
 
 export default function Comment({comment}: Readonly<{ comment: CommentByPost }>) {
@@ -45,18 +45,18 @@ export default function Comment({comment}: Readonly<{ comment: CommentByPost }>)
         </div>
         
         <div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 text-default-500">
             <div className="flex gap-2 content-center">
               <p className="font-semibold text-small">{likeCount}</p>
               <button onClick={() => handleLike()}>
-                <HeartIcon
-                  className={isLiked ? "w-4 fill-danger text-danger" : "w-4 fill-default-500 text-default-500"}/>
+                <ThumbUpIcon className={isLiked ? "w-4 fill-primary" : "w-4 fill-default-500"}/>
+              
               </button>
             </div>
             <div className="flex gap-2 content-center">
               <p className="font-semibold text-small">{dislikeCount}</p>
               <button onClick={() => handleDislike()}>
-                <ThumbDownIcon className={isDisliked ? "w-4 fill-primary" : "w-4 fill-default-500"}/>
+                <ThumbDownIcon className={isDisliked ? "w-4 fill-danger" : "w-4 fill-default-500"}/>
               </button>
             </div>
           </div>

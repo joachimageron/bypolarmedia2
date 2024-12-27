@@ -63,7 +63,6 @@ export default function EditProfilButton({
       image: image ? String(image) : undefined,
       bgImage: bgImage ? String(bgImage) : undefined,
     }
-    console.log("data :", data);
     setIsUpdating(true);
     
     const res = await updateUser(session?.user.userId, data);

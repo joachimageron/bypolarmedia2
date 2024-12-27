@@ -37,7 +37,6 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
     setIsLiked(!!liked)
     if (liked) setLikeCount(likeCount + 1)
     else setLikeCount(likeCount - 1)
-    console.log("is liked", !!liked)
   }
   
   const handleDislike = async () => {
@@ -45,10 +44,7 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
     setIsDisliked(!!disliked)
     if (disliked) setDislikeCount(dislikeCount + 1)
     else setDislikeCount(dislikeCount - 1)
-    console.log("is disliked", !!disliked)
   }
-  
-  console.log("post", post)
   
   return (
     <Card className="my-5">

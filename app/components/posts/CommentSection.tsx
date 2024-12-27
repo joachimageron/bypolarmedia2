@@ -21,7 +21,6 @@ export default function CommentSection({post}: Readonly<{
     const getComments = async () => {
       const comments = await getCommentsByPost(post.id);
       setComments(comments);
-      console.log("Comments", comments)
     }
     getComments()
   }, [post.id])

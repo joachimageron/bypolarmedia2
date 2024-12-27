@@ -13,7 +13,6 @@ export default function FollowButton({followed , followerId, followingId}: Reado
   
   const handleFollow = async () => {
     const followed = await toggleFollowUser(followerId, followingId)
-    console.log("followed", followed)
     setIsFollowed(followed)
   }
   
