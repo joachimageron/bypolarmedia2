@@ -15,6 +15,7 @@ export default function Home() {
     if (isLoading || isLoading === "loaded") return; // empêche d'appeler plusieurs fois lors de l'arrivé en bas
     setIsLoading(true);
     const newPosts = await getAllPosts(skip.current, take);
+    if (newPosts === null) {return}
     if (newPosts.length === 0) {
       setIsLoading("loaded");
       return;
@@ -58,7 +59,7 @@ export default function Home() {
   
   return (
     <main className={"m-auto max-w-xl mb-20"}>
-      <PostContainer posts={posts} isLoading={isLoading}/>
+      <PostContainer posts={posts} isLoading={isLoading} displayFollow={true}/>
     </main>
   );
 }

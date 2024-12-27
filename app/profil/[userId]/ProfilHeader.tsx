@@ -5,6 +5,7 @@ import EditProfilButton from "@/app/profil/[userId]/EditProfilButton";
 import {useSession} from "next-auth/react";
 import {useState} from "react";
 import {UserById} from "@/utils/types/data";
+import ProfilHeaderFollowButton from "@/app/profil/[userId]/ProfilHeaderFollowButton";
 
 type ProfilHeaderProps = {
   userInfo: UserById
@@ -18,7 +19,7 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
   const [imageUrl, setImageUrl] = useState(userInfo?.image ?? undefined);
   const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>(userInfo?.bgImage ?? undefined);
   
-  console.log(userInfo)
+  console.log("user info :",userInfo)
   return (
     <section className={"mt-5"}>
       {backgroundUrl === "" && <div className={"mt-10"}/>}
@@ -41,6 +42,13 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
                 setBackgroundUrl={setBackgroundUrl}
              />
           }
+          {session && session?.user.userId !== userInfo?.id &&
+            <ProfilHeaderFollowButton
+               followed={userInfo.following.length>0}
+               followerId={session.user.userId}
+               followingId={userInfo.id}
+            />
+          }
         </div>
         <h1 className={"text-xl font-bold mt-5"}>{name}</h1>
         <p>{description}</p>
@@ -58,3 +66,4 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
     </section>
   );
 }
+

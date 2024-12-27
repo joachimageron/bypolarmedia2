@@ -1,4 +1,4 @@
-import {SignOutButton} from "@/app/components/AuthButton";
+import {SignOutButton} from "@/app/components/users/AuthButton";
 import {serverSession} from "@/utils/auth";
 
 export default async function SignOut() {

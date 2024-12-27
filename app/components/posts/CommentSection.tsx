@@ -1,7 +1,7 @@
 import {
 Input, Button, Divider, Form, Spinner,
 } from "@nextui-org/react";
-import {CommentsByPost, PostByUser} from "@/utils/types/data";
+import {CommentsByPost, PostExtended} from "@/utils/types/data";
 import {addComment, getCommentsByPost} from "@/utils/data";
 import {FormEvent, useEffect, useState} from "react";
 import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
@@ -9,7 +9,7 @@ import {useSession} from "next-auth/react";
 import Comment from "@/app/components/posts/Comment";
 
 export default function CommentSection({post}: Readonly<{
-  post: PostByUser,
+  post: PostExtended,
 }>) {
   const {data} = useSession();
   const notification = useNotificationModal();

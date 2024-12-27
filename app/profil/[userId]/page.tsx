@@ -23,11 +23,11 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
   // console.log(userInfo)
   return (
       <main className={"m-auto max-w-xl mb-20"}>
-        <ProfilHeader userInfo={userInfo}/>
+        {userInfo && <ProfilHeader userInfo={userInfo}/> }
         <Divider className={"my-2"}/>
         <h2 className={"text-center font-bold"}>Posts</h2>
         <Divider className="my-2"/>
-        <ProfilPostContainer userInfo={userInfo}/>
+        {userInfo && <ProfilPostContainer userInfo={userInfo}/>}
       </main>
   );
 }

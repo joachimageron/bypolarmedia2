@@ -5,13 +5,13 @@ import {generateRandomKey} from "@/utils/utils";
 import {PostList} from "@/utils/types/data";
 
 
-export const PostContainer = ({posts, isLoading}: {posts: PostList, isLoading: boolean | string }) => {
+export const PostContainer = ({posts, isLoading, displayFollow}: {posts: PostList, isLoading: boolean | string, displayFollow: boolean }) => {
   
   return (
     <ul>
       <ul>
         {posts?.map(post => (
-          <PostCard key={post.id + generateRandomKey()} post={post}/>
+          <PostCard key={post.id + generateRandomKey()} post={post} displayFollow={displayFollow}/>
         ))}
       </ul>
       

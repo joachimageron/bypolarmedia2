@@ -2,7 +2,7 @@ import Link from "next/link";
 import HomeIcon from "./icons/HomeIcon";
 import SearchIcon from "./icons/SearchIcon";
 import CreatePostButton from "@/app/components/posts/CreatePostButton";
-import UserAvatarMenu from "@/app/components/UserAvataMenu";
+import UserAvatarMenu from "@/app/components/users/UserAvataMenu";
 import DarkModeSwitch from "@/app/components/DarkModeSwitch";
 import {serverSession} from "@/utils/auth";
 import ProfilIcon from "@/app/components/icons/ProfilIcon";

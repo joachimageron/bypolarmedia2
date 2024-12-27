@@ -10,16 +10,16 @@ import {
 
 } from "@nextui-org/react";
 import {useState} from "react";
-import {PostByUser} from "@/utils/types/data";
+import {PostExtended} from "@/utils/types/data";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
 import {toggleDislikePost, toggleLikePost} from "@/utils/data";
 import CommentSection from "@/app/components/posts/CommentSection";
-import FollowButton from "@/app/components/FollowButton";
+import FollowButton from "@/app/components/users/FollowButton";
 import {useSession} from "next-auth/react";
 import Link from "next/link";
 import ThumbUpIcon from "@/app/components/icons/ThumbUpIcon";
 
-export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
+export default function PostCard({post, displayFollow}: Readonly<{ post: PostExtended, displayFollow: boolean }>) {
   const {data} = useSession()
   
   const [isLiked, setIsLiked] = useState(!!post.likes.find(like => like.userId === post.author.id));
@@ -48,6 +48,8 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
     console.log("is disliked", !!disliked)
   }
   
+  console.log("post", post)
+  
   return (
     <Card className="my-5">
       <CardHeader className="justify-between">
@@ -57,8 +59,8 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
             <h4 className="text-small font-semibold leading-none text-default-600">{post.author.name}</h4>
           </div>
         </Link>
-        {data?.user.userId !== post.author.id && (
-          <FollowButton/>
+        {data && data.user.userId !== post.author.id && displayFollow && (
+          <FollowButton followed={post.author.following.length>0} followerId={data?.user.userId} followingId={post.author.id}/>
         )
         }
       
@@ -111,7 +113,7 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
               <p>Hide</p>
             ): (
               <p className="">
-                {post._count.comments} comments
+                {post._count.comments} comment{post._count.comments > 1 ? "s" : ""}
               </p>
             )}
           

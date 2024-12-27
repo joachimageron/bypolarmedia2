@@ -13,20 +13,24 @@ export type PostList = (Post & {
   hashtags: (PostHashtag & {
     hashtag: Hashtag;
   })[];
-  author: User;
+  author: User & {
+    following: Follower[];
+  };
   _count: {
     comments: number;
   };
 })[];
 
-export type PostByUser = Post & {
+export type PostExtended = Post & {
   likes: Like[];
   dislikes: Dislike[];
   media: Media[];
   hashtags: (PostHashtag & {
     hashtag: Hashtag;
   })[];
-  author: User;
+  author: User & {
+    following: Follower[];
+  };
   _count: {
     comments: number;
   };

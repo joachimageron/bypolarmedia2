@@ -1,5 +1,5 @@
 'use client'
-import {SignInButtonGitHub, SignInButtonGoogle} from "@/app/components/AuthButton";
+import {SignInButtonGitHub, SignInButtonGoogle} from "@/app/components/users/AuthButton";
 import { Card, CardBody, CardHeader, Divider} from "@nextui-org/react";
 
 export default function Signin() {

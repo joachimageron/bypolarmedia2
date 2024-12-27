@@ -1,5 +1,6 @@
 'use server';
 import { prisma } from "@/prisma/prisma";
+import {serverSession} from "@/utils/auth";
 
 /**
  * ---------------------------
@@ -119,6 +120,8 @@ export async function getAllPosts(
   skip: number = 0,
   take: number = 10
 ) {
+  const session = await serverSession()
+  if (!session) return null;
   return prisma.post.findMany({
     skip,
     take,
@@ -139,7 +142,15 @@ export async function getAllPosts(
           hashtag: true,
         },
       },
-      author: true,
+      author: {
+        include: {
+          following: {
+            where: {
+              followerId: session.user.userId,
+            },
+          },
+        },
+      },
     },
   });
 }
@@ -156,6 +167,8 @@ export async function getPostsByUser(
   skip: number = 0,
   take: number = 10
 ) {
+  const session = await serverSession()
+  if (!session) return null;
   return prisma.post.findMany({
     where: { authorId: userId },
     skip,
@@ -177,7 +190,15 @@ export async function getPostsByUser(
           hashtag: true,
         },
       },
-      author: true,
+      author:{
+        include: {
+          following: {
+            where: {
+              followerId: session.user.userId,
+            },
+          },
+        }
+      }
     },
   });
 }
