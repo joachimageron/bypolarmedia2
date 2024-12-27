@@ -11,13 +11,13 @@ import {
 } from "@nextui-org/react";
 import {useState} from "react";
 import {PostByUser} from "@/utils/types/data";
-import HeartIcon from "@/app/components/icons/HeartIcon";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
 import {dislikeOrUndislikePost, likeOrDislikePost} from "@/utils/data";
 import CommentSection from "@/app/components/posts/CommentSection";
 import FollowButton from "@/app/components/FollowButton";
 import {useSession} from "next-auth/react";
 import Link from "next/link";
+import ThumbUpIcon from "@/app/components/icons/ThumbUpIcon";
 
 export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
   const {data} = useSession()
@@ -52,7 +52,7 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
     <Card className="my-5">
       <CardHeader className="justify-between">
         <Link href={`/profil/${post.authorId}`} className="flex gap-3">
-          <Avatar className={"z-0"} size="md" src={post.author.image ?? undefined}/>
+          <Avatar showFallback className={"z-0"} size="md" src={post.author.image ?? undefined}/>
           <div className="flex items-center justify-start">
             <h4 className="text-small font-semibold leading-none text-default-600">{post.author.name}</h4>
           </div>
@@ -97,13 +97,13 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
           <div className="flex gap-2">
             <p className="font-semibold text-small">{likeCount}</p>
             <button onClick={() => handleLike()}>
-              <HeartIcon className={isLiked ? "w-5 fill-danger text-danger" : "w-5 fill-default-900 text-default-900"}/>
+              <ThumbUpIcon className={isLiked ? "w-5 fill-primary" : "w-5 fill-default-900"}/>
             </button>
           </div>
           <div className="flex gap-2">
             <p className="font-semibold text-small">{dislikeCount}</p>
             <button onClick={() => handleDislike()}>
-              <ThumbDownIcon className={isDisliked ? "w-5 fill-primary" : "w-5 fill-default-900"}/>
+              <ThumbDownIcon className={isDisliked ? "w-5 fill-danger" : "w-5 fill-default-900"}/>
             </button>
           </div>
           <button onClick={() => setCommentOpen(!commentOpen)} className={"ml-2 flex gap-1 text-small text-default-500 underline"}>

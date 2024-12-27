@@ -1,8 +1,8 @@
 'use client'
-import {PostList} from "@/utils/types/data";
 import PostCard from "@/app/components/posts/PostCard";
 import {Spinner} from "@nextui-org/react";
 import {generateRandomKey} from "@/utils/utils";
+import {PostList} from "@/utils/types/data";
 
 
 export const PostContainer = ({posts, isLoading}: {posts: PostList, isLoading: boolean | string }) => {

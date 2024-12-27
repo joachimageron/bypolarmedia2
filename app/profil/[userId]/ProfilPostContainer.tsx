@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {PostList, UserById} from "@/utils/types/data";
 import {getPostsByUser} from "@/utils/data";
 
-export default function ProfilPostContainer({userInfo}: Readonly<UserById>) {
+export default function ProfilPostContainer({userInfo}: Readonly<{ userInfo: UserById }>) {
   
   const [posts, setPosts] = useState<PostList>([]);
   const skip = useRef(0);

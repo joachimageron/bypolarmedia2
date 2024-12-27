@@ -1,8 +1,8 @@
 "use client";
 import {PostContainer} from "@/app/components/posts/PostContainer";
 import {useEffect, useRef, useState} from "react";
-import {PostList} from "@/utils/types/data";
 import {getAllPosts} from "@/utils/data";
+import {PostList} from "@/utils/types/data";
 
 export default function Home() {
   

@@ -1,32 +1,24 @@
-'use server'
-import {prisma} from "@/prisma/prisma";
-
-// ---------------------------
-// Méthodes pour les Utilisateurs
-// ---------------------------
+'use server';
+import { prisma } from "@/prisma/prisma";
 
 /**
- * Créer un nouvel utilisateur
+ * ---------------------------
+ * Méthodes pour les Utilisateurs
+ * ---------------------------
  */
-/**
- * méthode non implémentée, car les utilisateurs sont créé par nextauth
- */
-
 
 /**
  * Savoir si un utilisateur existe
  */
 export async function userExists(id: string) {
   const user = await prisma.user.findUnique({
-    where: { id: id },
+    where: { id },
   });
   return !!user;
 }
 
-/**
- * Récupérer un utilisateur par son ID
- */
-export async function getUserById(userId: string | null){
+
+export async function getUserById(userId: string | null) {
   if (!userId) return null;
   return prisma.user.findUnique({
     where: { id: userId },
@@ -37,9 +29,7 @@ export async function getUserById(userId: string | null){
   });
 }
 
-/**
- * Récupérer un utilisateur par son email
- */
+
 export async function getUserByEmail(email: string) {
   return prisma.user.findUnique({
     where: { email },
@@ -54,38 +44,42 @@ export async function getUserByEmail(email: string) {
 /**
  * Mettre à jour les informations d'un utilisateur
  */
-export async function updateUser(userId: string, data: Partial<{
-  name?: string;
-  description?: string;
-  image?: string;
-  bgImage?: string;
-}>) {
+
+export async function updateUser(
+  userId: string,
+  data: Partial<{
+    name?: string;
+    description?: string;
+    image?: string;
+    bgImage?: string;
+  }>
+) {
   return prisma.user.update({
     where: { id: userId },
     data,
   });
 }
 
-// ---------------------------
-// Méthodes pour les Publications
-// ---------------------------
+/**
+ * ---------------------------
+ * Méthodes pour les Publications
+ * ---------------------------
+ */
 
 /**
  * Créer une nouvelle publication
  */
+
 export async function createPost(data: {
   authorId: string;
   content: string;
-  
 }) {
   return prisma.post.create({
     data,
   });
 }
 
-/**
- * Récupérer une publication par son ID
- */
+
 export async function getPostById(postId: string) {
   return prisma.post.findUnique({
     where: { id: postId },
@@ -104,13 +98,14 @@ export async function getPostById(postId: string) {
   });
 }
 
-/**
- * Récupérer toutes les publications (avec pagination)
- */
-export async function getAllPosts(skip: number = 0, take: number = 10) {
+
+export async function getAllPosts(
+  skip: number = 0,
+  take: number = 10
+) {
   return prisma.post.findMany({
-    skip: skip,
-    take: take,
+    skip,
+    take,
     orderBy: {
       createdAt: 'desc',
     },
@@ -136,11 +131,16 @@ export async function getAllPosts(skip: number = 0, take: number = 10) {
 /**
  * Récupérer toutes les publications d'un utilisateur
  */
-export async function getPostsByUser(userId: string, skip: number = 0, take: number = 10) {
+
+export async function getPostsByUser(
+  userId: string,
+  skip: number = 0,
+  take: number = 10
+) {
   return prisma.post.findMany({
     where: { authorId: userId },
-    skip: skip,
-    take: take,
+    skip,
+    take,
     orderBy: {
       createdAt: 'desc',
     },
@@ -163,32 +163,30 @@ export async function getPostsByUser(userId: string, skip: number = 0, take: num
   });
 }
 
-// ---------------------------
-// Méthodes pour les Commentaires
-// ---------------------------
-
 /**
- * Ajouter un commentaire à une publication
+ * ---------------------------
+ * Méthodes pour les Commentaires
+ * ---------------------------
  */
+
+
 export async function addComment(data: {
   postId: string;
   authorId: string;
   content: string;
 }) {
-  if (!data.content || !data.postId || !data.authorId ) return false;
+  if (!data.content || !data.postId || !data.authorId) return false;
   return prisma.comment.create({
     data,
     include: {
       author: true,
       likes: true,
       dislikes: true,
-    }
+    },
   });
 }
 
-/**
- * Récupérer les commentaires d'une publication
- */
+
 export async function getCommentsByPost(postId: string) {
   return prisma.comment.findMany({
     where: { postId },
@@ -200,14 +198,17 @@ export async function getCommentsByPost(postId: string) {
   });
 }
 
-// ---------------------------
-// Méthodes pour les Likes
-// ---------------------------
-
 /**
- * handle like or unlike post
+ * ---------------------------
+ * Méthodes pour les Likes
+ * ---------------------------
  */
-export async function likeOrDislikePost(userId: string, postId: string) {
+
+
+export async function likeOrDislikePost(
+  userId: string,
+  postId: string
+) {
   const like = await prisma.like.findFirst({
     where: {
       userId,
@@ -216,9 +217,7 @@ export async function likeOrDislikePost(userId: string, postId: string) {
   });
   if (like) {
     await prisma.like.delete({
-      where: {
-        id: like.id,
-      },
+      where: { id: like.id },
     });
     return false;
   } else {
@@ -231,10 +230,11 @@ export async function likeOrDislikePost(userId: string, postId: string) {
   }
 }
 
-/**
- * handle like or unlike comment
- */
-export async function likeOrDislikeComment(userId: string, commentId: string) {
+
+export async function likeOrDislikeComment(
+  userId: string,
+  commentId: string
+) {
   const like = await prisma.like.findFirst({
     where: {
       userId,
@@ -243,9 +243,7 @@ export async function likeOrDislikeComment(userId: string, commentId: string) {
   });
   if (like) {
     await prisma.like.delete({
-      where: {
-        id: like.id,
-      },
+      where: { id: like.id },
     });
     return false;
   } else {
@@ -258,15 +256,17 @@ export async function likeOrDislikeComment(userId: string, commentId: string) {
   }
 }
 
-
-// ---------------------------
-// Méthodes pour les Dislikes
-// ---------------------------
-
 /**
- * handle dislike or undislike post
+ * ---------------------------
+ * Méthodes pour les Dislikes
+ * ---------------------------
  */
-export async function dislikeOrUndislikePost(userId: string, postId: string) {
+
+
+export async function dislikeOrUndislikePost(
+  userId: string,
+  postId: string
+) {
   const dislike = await prisma.dislike.findFirst({
     where: {
       userId,
@@ -275,9 +275,7 @@ export async function dislikeOrUndislikePost(userId: string, postId: string) {
   });
   if (dislike) {
     await prisma.dislike.delete({
-      where: {
-        id: dislike.id,
-      },
+      where: { id: dislike.id },
     });
     return false;
   } else {
@@ -290,10 +288,11 @@ export async function dislikeOrUndislikePost(userId: string, postId: string) {
   }
 }
 
-/**
- * handle dislike or undislike comment
- */
-export async function dislikeOrUndislikeComment(userId: string, commentId: string) {
+
+export async function dislikeOrUndislikeComment(
+  userId: string,
+  commentId: string
+) {
   const dislike = await prisma.dislike.findFirst({
     where: {
       userId,
@@ -302,9 +301,7 @@ export async function dislikeOrUndislikeComment(userId: string, commentId: strin
   });
   if (dislike) {
     await prisma.dislike.delete({
-      where: {
-        id: dislike.id,
-      },
+      where: { id: dislike.id },
     });
     return false;
   } else {
@@ -317,15 +314,20 @@ export async function dislikeOrUndislikeComment(userId: string, commentId: strin
   }
 }
 
-
-// ---------------------------
-// Méthodes pour les Followers
-// ---------------------------
+/**
+ * ---------------------------
+ * Méthodes pour les Followers
+ * ---------------------------
+ */
 
 /**
  * Suivre un utilisateur
  */
-export async function followUser(followerId: string, followingId: string) {
+
+export async function followUser(
+  followerId: string,
+  followingId: string
+) {
   return prisma.follower.create({
     data: {
       followerId,
@@ -337,7 +339,11 @@ export async function followUser(followerId: string, followingId: string) {
 /**
  * Ne plus suivre un utilisateur
  */
-export async function unfollowUser(followerId: string, followingId: string) {
+
+export async function unfollowUser(
+  followerId: string,
+  followingId: string
+) {
   return prisma.follower.deleteMany({
     where: {
       followerId,
@@ -346,9 +352,7 @@ export async function unfollowUser(followerId: string, followingId: string) {
   });
 }
 
-/**
- * Récupérer les followers d'un utilisateur
- */
+
 export async function getFollowers(userId: string) {
   return prisma.follower.findMany({
     where: { followingId: userId },
@@ -358,9 +362,7 @@ export async function getFollowers(userId: string) {
   });
 }
 
-/**
- * Récupérer les utilisateurs que suit un utilisateur
- */
+
 export async function getFollowing(userId: string) {
   return prisma.follower.findMany({
     where: { followerId: userId },
@@ -370,13 +372,16 @@ export async function getFollowing(userId: string) {
   });
 }
 
-// ---------------------------
-// Méthodes pour les Notifications
-// ---------------------------
+/**
+ * ---------------------------
+ * Méthodes pour les Notifications
+ * ---------------------------
+ */
 
 /**
  * Créer une notification
  */
+
 export async function createNotification(data: {
   userId: string;
   content: string;
@@ -389,6 +394,7 @@ export async function createNotification(data: {
 /**
  * Récupérer les notifications d'un utilisateur
  */
+
 export async function getNotificationsByUser(userId: string) {
   return prisma.notification.findMany({
     where: { userId },
@@ -401,20 +407,26 @@ export async function getNotificationsByUser(userId: string) {
 /**
  * Marquer une notification comme lue
  */
-export async function markNotificationAsRead(notificationId: string) {
+
+export async function markNotificationAsRead(
+  notificationId: string
+) {
   return prisma.notification.update({
     where: { id: notificationId },
     data: { isRead: true },
   });
 }
 
-// ---------------------------
-// Méthodes pour les Hashtags
-// ---------------------------
+/**
+ * ---------------------------
+ * Méthodes pour les Hashtags
+ * ---------------------------
+ */
 
 /**
  * Créer ou récupérer un hashtag
  */
+
 export async function upsertHashtag(name: string) {
   return prisma.hashtag.upsert({
     where: { name },
@@ -426,7 +438,11 @@ export async function upsertHashtag(name: string) {
 /**
  * Associer un hashtag à une publication
  */
-export async function addHashtagToPost(postId: string, hashtagId: string) {
+
+export async function addHashtagToPost(
+  postId: string,
+  hashtagId: string
+) {
   return prisma.postHashtag.create({
     data: {
       postId,
@@ -435,9 +451,7 @@ export async function addHashtagToPost(postId: string, hashtagId: string) {
   });
 }
 
-/**
- * Récupérer les publications associées à un hashtag
- */
+
 export async function getPostsByHashtag(name: string) {
   return prisma.post.findMany({
     where: {
@@ -457,13 +471,16 @@ export async function getPostsByHashtag(name: string) {
   });
 }
 
-// ---------------------------
-// Méthodes pour les Médias
-// ---------------------------
+/**
+ * ---------------------------
+ * Méthodes pour les Médias
+ * ---------------------------
+ */
 
 /**
  * Ajouter un média à une publication
  */
+
 export async function addMediaToPost(data: {
   postId: string;
   url: string;
@@ -477,6 +494,7 @@ export async function addMediaToPost(data: {
 /**
  * Récupérer les médias d'une publication
  */
+
 export async function getMediaByPost(postId: string) {
   return prisma.media.findMany({
     where: { postId },

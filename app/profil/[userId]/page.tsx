@@ -1,7 +1,6 @@
 import {getUserById, userExists} from "@/utils/data";
 import {notFound} from "next/navigation";
 import ProfilHeader from "@/app/profil/[userId]/ProfilHeader";
-import {PostContainer} from "@/app/components/posts/PostContainer";
 import {Divider} from "@nextui-org/react";
 import ProfilPostContainer from "@/app/profil/[userId]/ProfilPostContainer";
 

@@ -26,7 +26,7 @@ export default function UserAvatarMenu() {
   return (
     <Popover isOpen={isPopoverOpen} onOpenChange={open => setIsPopoverOpen(open)} placement="top">
       <PopoverTrigger>
-        <Avatar className={"hover:cursor-pointer w-7 h-7"} src={session?.user.image ?? undefined}/>
+        <Avatar showFallback className={"hover:cursor-pointer w-7 h-7"} src={session?.user.image ?? undefined}/>
       </PopoverTrigger>
       <PopoverContent>
         <div className="flex flex-col justify-center items-center">

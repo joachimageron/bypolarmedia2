@@ -1,10 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model User {
@@ -12,27 +12,24 @@ model User {
   name           String?
   email          String?         @unique
   emailVerified  DateTime?
-  description    String?
   image          String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  description    String?
   bgImage        String?
-  accounts       Account[] // Optional for WebAuthn support
+  accounts       Account[]
   authenticators Authenticator[]
-
-  // Relations
-  posts         Post[]
-  comments      Comment[]
-  likes         Like[]
-  dislikes      Dislike[]
-  notifications Notification[]
-  followers     Follower[]     @relation("UserFollowers")
-  following     Follower[]     @relation("UserFollowing")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  comments       Comment[]
+  dislikes       Dislike[]
+  following      Follower[]      @relation("UserFollowing")
+  followers      Follower[]      @relation("UserFollowers")
+  likes          Like[]
+  notifications  Notification[]
+  posts          Post[]
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String   @id @default(cuid())
   userId            String
   type              String
   provider          String
@@ -44,11 +41,9 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -62,39 +57,36 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
 }
 
 model Post {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   authorId  String
   content   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  author   User          @relation(fields: [authorId], references: [id])
-  comments Comment[]
-  likes    Like[]
-  dislikes Dislike[]
-  media    Media[]
-  hashtags PostHashtag[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  comments  Comment[]
+  dislikes  Dislike[]
+  likes     Like[]
+  media     Media[]
+  author    User          @relation(fields: [authorId], references: [id])
+  hashtags  PostHashtag[]
 }
 
 model Comment {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   postId    String
   authorId  String
   content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  post     Post      @relation(fields: [postId], references: [id])
-  author   User      @relation(fields: [authorId], references: [id])
-  likes    Like[]
-  dislikes Dislike[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  author    User      @relation(fields: [authorId], references: [id])
+  post      Post      @relation(fields: [postId], references: [id])
+  dislikes  Dislike[]
+  likes     Like[]
 }
 
 model Like {
@@ -103,10 +95,9 @@ model Like {
   postId    String?
   commentId String?
   createdAt DateTime @default(now())
-
-  user    User     @relation(fields: [userId], references: [id])
-  post    Post?    @relation(fields: [postId], references: [id])
-  comment Comment? @relation(fields: [commentId], references: [id])
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  post      Post?    @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Dislike {
@@ -115,10 +106,9 @@ model Dislike {
   postId    String?
   commentId String?
   createdAt DateTime @default(now())
-
-  user    User     @relation(fields: [userId], references: [id])
-  post    Post?    @relation(fields: [postId], references: [id])
-  comment Comment? @relation(fields: [commentId], references: [id])
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  post      Post?    @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Follower {
@@ -126,9 +116,8 @@ model Follower {
   followerId  String
   followingId String
   createdAt   DateTime @default(now())
-
-  follower  User @relation("UserFollowers", fields: [followerId], references: [id])
-  following User @relation("UserFollowing", fields: [followingId], references: [id])
+  following   User     @relation("UserFollowing", fields: [followingId], references: [id])
+  follower    User     @relation("UserFollowers", fields: [followerId], references: [id])
 
   @@unique([followerId, followingId])
 }
@@ -139,33 +128,29 @@ model Notification {
   content   String
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Media {
   id        String   @id @default(cuid())
   postId    String
   url       String
-  type      String // Exemple : "image", "video"
+  type      String
   createdAt DateTime @default(now())
-
-  post Post @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
 }
 
 model Hashtag {
-  id   String @id @default(cuid())
-  name String @unique
-
+  id    String        @id @default(cuid())
+  name  String        @unique
   posts PostHashtag[]
 }
 
 model PostHashtag {
   postId    String
   hashtagId String
-
-  post    Post    @relation(fields: [postId], references: [id])
-  hashtag Hashtag @relation(fields: [hashtagId], references: [id])
+  hashtag   Hashtag @relation(fields: [hashtagId], references: [id])
+  post      Post    @relation(fields: [postId], references: [id])
 
   @@id([postId, hashtagId])
 }

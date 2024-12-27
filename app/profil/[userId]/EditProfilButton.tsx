@@ -22,14 +22,14 @@ export default function EditProfilButton({
   setDescription,
   setImageUrl,
   setBackgroundUrl,
-}: {
+}: Readonly<{
   description: string | undefined,
   imageUrl: string | undefined,
   backgroundUrl: string | undefined,
   setDescription: (description: string | undefined) => void,
   setImageUrl: (imageUrl: string | undefined) => void,
   setBackgroundUrl: (backgroundUrl: string | undefined) => void,
-}) {
+}>) {
   const {data: session} = useSession();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   
@@ -59,9 +59,9 @@ export default function EditProfilButton({
     const bgImage = formData.get("bgImage");
     
     const data = {
-      description: description ? description.toString() : undefined,
-      image: image ? image.toString() : undefined,
-      bgImage: bgImage ? bgImage.toString() : undefined,
+      description: description ? String(description) : undefined,
+      image: image ? String(image) : undefined,
+      bgImage: bgImage ? String(bgImage) : undefined,
     }
     console.log("data :", data);
     setIsUpdating(true);
@@ -99,7 +99,7 @@ export default function EditProfilButton({
   
   return (
     <div className={"flex justify-center items-center"}>
-      <Button color={"primary"} onClick={onOpen}>Edit Profil</Button>
+      <Button color={"primary"} onPress={onOpen}>Edit Profil</Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

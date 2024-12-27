@@ -1,12 +1,10 @@
 import {Post, Comment, Like, Dislike, Media, Hashtag, PostHashtag, User, Follower} from '@prisma/client'; // Import de Prisma pour les types
 
 
-export type UserById = {
-  userInfo: {
+export type UserById = User & {
     followers: Follower[]
     following: Follower[]
-  } & User | null
-}
+  }
 
 export type PostList = (Post & {
   likes: Like[];
