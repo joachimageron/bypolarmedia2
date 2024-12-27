@@ -82,7 +82,7 @@ export default function CreatePostButton() {
   return (
     <div className={"flex justify-center items-center"}>
       <button className={""} onClick={onOpen}><PlusIcon className={"fill-zinc-50"}/></button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
