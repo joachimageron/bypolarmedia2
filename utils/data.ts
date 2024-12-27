@@ -35,6 +35,29 @@ export async function getUserById(userId: string | null) {
 }
 
 /**
+ * Récupérer les informations de plusieurs utilisateurs à partir d'une liste d'IDs
+ * @param userIds - Tableau d'IDs d'utilisateurs
+ * @returns Tableau d'objets utilisateur ou tableau vide si aucun utilisateur trouvé
+ */
+export async function getUsersByIds(userIds: string[]) {
+  if (!userIds || userIds.length === 0) {
+    return [];
+  }
+  return prisma.user.findMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+    },
+    include: {
+      followers: true,
+      following: true,
+    },
+  });
+}
+
+
+/**
  * Récupérer un utilisateur par son email
  * @param email
  */
@@ -422,6 +445,7 @@ export async function getFollowers(userId: string) {
     where: { followingId: userId },
     include: {
       follower: true,
+      
     },
   });
 }

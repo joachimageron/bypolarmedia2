@@ -56,7 +56,7 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
           </div>
         </Link>
         {data && data.user.userId !== post.author.id && displayFollow && (
-          <FollowButton followed={post.author.following.length>0} followerId={data?.user.userId} followingId={post.author.id}/>
+          <FollowButton followed={post.author.following.length>0} followingId={post.author.id}/>
         )
         }
       

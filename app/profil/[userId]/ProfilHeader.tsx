@@ -6,6 +6,7 @@ import {useSession} from "next-auth/react";
 import {useState} from "react";
 import {UserById} from "@/utils/types/data";
 import ProfilHeaderFollowButton from "@/app/profil/[userId]/FollowButton";
+import ShowFollowButton from "@/app/profil/[userId]/ShowFollowButton";
 
 type ProfilHeaderProps = {
   userInfo: UserById
@@ -22,7 +23,7 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
   return (
     <section className={"mt-5"}>
       {backgroundUrl === "" && <div className={"mt-10"}/>}
-      <Image isBlurred  src={backgroundUrl !== "" ? backgroundUrl : undefined} alt={"background image of the user"}/>
+      <Image isBlurred src={backgroundUrl !== "" ? backgroundUrl : undefined} alt={"background image of the user"}/>
       <div className={"p-5"}>
         <div className={"flex justify-between items-end -mt-14"}>
           <Image
@@ -42,24 +43,28 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
              />
           }
           {session && session?.user.userId !== userInfo?.id &&
-            <ProfilHeaderFollowButton
-               followed={userInfo.following.length>0}
-               followerId={session.user.userId}
-               followingId={userInfo.id}
-            />
+             <ProfilHeaderFollowButton
+                followed={userInfo.following.length > 0}
+                followerId={session.user.userId}
+                followingId={userInfo.id}
+             />
           }
         </div>
         <h1 className={"text-xl font-bold mt-5"}>{name}</h1>
         <p>{description}</p>
         <div className={"flex justify-start gap-5 mt-5"}>
-          <button className={"flex gap-2"}>
-            <p className={"font-bold"}>{userInfo?.followers.length}</p>
-            <p>followers</p>
-          </button>
-          <button className={"flex gap-2"}>
-            <p className={"font-bold"}>{userInfo?.following.length}</p>
-            <p>following</p>
-          </button>
+          <ShowFollowButton listType={"followers"} userInfo={userInfo}>
+            <div className={"flex gap-2"}>
+              <p className={"font-bold"}>{userInfo?.followers.length}</p>
+              <p>followers</p>
+            </div>
+          </ShowFollowButton>
+          <ShowFollowButton listType={"following"} userInfo={userInfo}>
+            <div className={"flex gap-2"}>
+              <p className={"font-bold"}>{userInfo?.following.length}</p>
+              <p>following</p>
+            </div>
+          </ShowFollowButton>
         </div>
       </div>
     </section>
