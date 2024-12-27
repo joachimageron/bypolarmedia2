@@ -5,7 +5,7 @@ import EditProfilButton from "@/app/profil/[userId]/EditProfilButton";
 import {useSession} from "next-auth/react";
 import {useState} from "react";
 import {UserById} from "@/utils/types/data";
-import ProfilHeaderFollowButton from "@/app/profil/[userId]/ProfilHeaderFollowButton";
+import ProfilHeaderFollowButton from "@/app/profil/[userId]/FollowButton";
 
 type ProfilHeaderProps = {
   userInfo: UserById
