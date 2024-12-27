@@ -12,7 +12,7 @@ import {
 import {useState} from "react";
 import {PostByUser} from "@/utils/types/data";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
-import {dislikeOrUndislikePost, likeOrDislikePost} from "@/utils/data";
+import {toggleDislikePost, toggleLikePost} from "@/utils/data";
 import CommentSection from "@/app/components/posts/CommentSection";
 import FollowButton from "@/app/components/FollowButton";
 import {useSession} from "next-auth/react";
@@ -33,7 +33,7 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
   const [errorLoadingImage, setErrorLoadingImage] = useState(false)
   
   const handleLike = async () => {
-    const liked = await likeOrDislikePost(post.author.id, post.id)
+    const liked = await toggleLikePost(post.author.id, post.id)
     setIsLiked(!!liked)
     if (liked) setLikeCount(likeCount + 1)
     else setLikeCount(likeCount - 1)
@@ -41,7 +41,7 @@ export default function PostCard({post}: Readonly<{ post: PostByUser }>) {
   }
   
   const handleDislike = async () => {
-    const disliked = await dislikeOrUndislikePost(post.author.id, post.id)
+    const disliked = await toggleDislikePost(post.author.id, post.id)
     setIsDisliked(!!disliked)
     if (disliked) setDislikeCount(dislikeCount + 1)
     else setDislikeCount(dislikeCount - 1)

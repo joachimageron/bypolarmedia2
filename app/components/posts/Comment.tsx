@@ -4,7 +4,7 @@ import Link from "next/link";
 import HeartIcon from "@/app/components/icons/HeartIcon";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
 import {useState} from "react";
-import {dislikeOrUndislikeComment, likeOrDislikeComment} from "@/utils/data";
+import {toggleDislikeComment, toggleLikeComment} from "@/utils/data";
 
 
 export default function Comment({comment}: Readonly<{ comment: CommentByPost }>) {
@@ -15,7 +15,7 @@ export default function Comment({comment}: Readonly<{ comment: CommentByPost }>)
   const [dislikeCount, setDislikeCount] = useState(comment.dislikes.length);
   
   const handleLike = async () => {
-    const liked = await likeOrDislikeComment(comment.author.id, comment.id)
+    const liked = await toggleLikeComment(comment.author.id, comment.id)
     setIsLiked(!!liked)
     if (liked) setLikeCount(likeCount + 1)
     else setLikeCount(likeCount - 1)
@@ -23,7 +23,7 @@ export default function Comment({comment}: Readonly<{ comment: CommentByPost }>)
   
   const handleDislike = async () => {
     setIsDisliked(!isDisliked)
-    const disliked = await dislikeOrUndislikeComment(comment.author.id, comment.id)
+    const disliked = await toggleDislikeComment(comment.author.id, comment.id)
     if (disliked) setDislikeCount(dislikeCount + 1)
     else setDislikeCount(dislikeCount - 1)
   }

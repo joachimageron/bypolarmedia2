@@ -9,6 +9,7 @@ import { prisma } from "@/prisma/prisma";
 
 /**
  * Savoir si un utilisateur existe
+ * @param id
  */
 export async function userExists(id: string) {
   const user = await prisma.user.findUnique({
@@ -17,7 +18,10 @@ export async function userExists(id: string) {
   return !!user;
 }
 
-
+/**
+ * Créer un nouvel utilisateur
+ * @param userId
+ */
 export async function getUserById(userId: string | null) {
   if (!userId) return null;
   return prisma.user.findUnique({
@@ -29,7 +33,10 @@ export async function getUserById(userId: string | null) {
   });
 }
 
-
+/**
+ * Récupérer un utilisateur par son email
+ * @param email
+ */
 export async function getUserByEmail(email: string) {
   return prisma.user.findUnique({
     where: { email },
@@ -43,8 +50,9 @@ export async function getUserByEmail(email: string) {
 
 /**
  * Mettre à jour les informations d'un utilisateur
+ * @param userId
+ * @param data{name, description, image, bgImage}
  */
-
 export async function updateUser(
   userId: string,
   data: Partial<{
@@ -68,6 +76,7 @@ export async function updateUser(
 
 /**
  * Créer une nouvelle publication
+ * @param data{authorId, content}
  */
 
 export async function createPost(data: {
@@ -79,7 +88,10 @@ export async function createPost(data: {
   });
 }
 
-
+/**
+ * Récupérer une publication par son ID
+ * @param postId
+ */
 export async function getPostById(postId: string) {
   return prisma.post.findUnique({
     where: { id: postId },
@@ -98,7 +110,11 @@ export async function getPostById(postId: string) {
   });
 }
 
-
+/**
+ * Récupérer toutes les publications
+ * @param skip
+ * @param take
+ */
 export async function getAllPosts(
   skip: number = 0,
   take: number = 10
@@ -130,6 +146,9 @@ export async function getAllPosts(
 
 /**
  * Récupérer toutes les publications d'un utilisateur
+ * @param userId
+ * @param skip
+ * @param take
  */
 
 export async function getPostsByUser(
@@ -170,6 +189,10 @@ export async function getPostsByUser(
  */
 
 
+/**
+ * Ajouter un commentaire à une publication
+ * @param data{postId, authorId, content}
+ */
 export async function addComment(data: {
   postId: string;
   authorId: string;
@@ -186,7 +209,10 @@ export async function addComment(data: {
   });
 }
 
-
+/**
+ * Récupérer les commentaires d'une publication
+ * @param postId
+ */
 export async function getCommentsByPost(postId: string) {
   return prisma.comment.findMany({
     where: { postId },
@@ -204,8 +230,12 @@ export async function getCommentsByPost(postId: string) {
  * ---------------------------
  */
 
-
-export async function likeOrDislikePost(
+/**
+ * Liker ou ne plus liker une publication
+ * @param userId
+ * @param postId
+ */
+export async function toggleLikePost(
   userId: string,
   postId: string
 ) {
@@ -230,8 +260,12 @@ export async function likeOrDislikePost(
   }
 }
 
-
-export async function likeOrDislikeComment(
+/**
+ * Liker ou ne plus liker un commentaire
+ * @param userId
+ * @param commentId
+ */
+export async function toggleLikeComment(
   userId: string,
   commentId: string
 ) {
@@ -262,8 +296,12 @@ export async function likeOrDislikeComment(
  * ---------------------------
  */
 
-
-export async function dislikeOrUndislikePost(
+/**
+ * Dislike ou ne plus dislike une publication
+ * @param userId
+ * @param postId
+ */
+export async function toggleDislikePost(
   userId: string,
   postId: string
 ) {
@@ -288,8 +326,12 @@ export async function dislikeOrUndislikePost(
   }
 }
 
-
-export async function dislikeOrUndislikeComment(
+/**
+ * Dislike ou ne plus dislike un commentaire
+ * @param userId
+ * @param commentId
+ */
+export async function toggleDislikeComment(
   userId: string,
   commentId: string
 ) {
@@ -321,35 +363,36 @@ export async function dislikeOrUndislikeComment(
  */
 
 /**
- * Suivre un utilisateur
+ * Suivre ou ne plus suivre un utilisateur
+ * @param followerId
+ * @param followingId
  */
 
-export async function followUser(
+export async function toggleFollowUser(
   followerId: string,
   followingId: string
 ) {
-  return prisma.follower.create({
-    data: {
-      followerId,
-      followingId,
-    },
-  });
-}
-
-/**
- * Ne plus suivre un utilisateur
- */
-
-export async function unfollowUser(
-  followerId: string,
-  followingId: string
-) {
-  return prisma.follower.deleteMany({
+  const follow = await prisma.follower.findFirst({
     where: {
       followerId,
       followingId,
     },
   });
+
+  if (follow) {
+    await prisma.follower.delete({
+      where: { id: follow.id },
+    });
+    return false;
+  } else {
+    await prisma.follower.create({
+      data: {
+        followerId,
+        followingId,
+      },
+    });
+    return true;
+  }
 }
 
 
