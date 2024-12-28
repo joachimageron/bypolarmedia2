@@ -1,6 +1,7 @@
 'use server';
-import { prisma } from "@/prisma/prisma";
+import {prisma} from "@/prisma/prisma";
 import {serverSession} from "@/utils/auth";
+import {hash} from "node:crypto";
 
 /**
  * ---------------------------
@@ -9,24 +10,62 @@ import {serverSession} from "@/utils/auth";
  */
 
 /**
+ * Créer un nouvel utilisateur
+ * @param data{email, name, password}
+ */
+export async function createUser(data: {
+  email: FormDataEntryValue;
+  name: FormDataEntryValue;
+  password: FormDataEntryValue;
+}) {
+  const strData = {
+    email: String(data.email),
+    name: String(data.name),
+    password: hash('sha1', String(data.password)),
+  };
+  return prisma.user.create({
+    data: strData,
+  });
+}
+
+/**
+ * Vérifier les informations de connexion d'un utilisateur et le retourne si les informations sont correctes
+ * @param email
+ * @param password
+ */
+export async function verifyUserCredentials(email: FormDataEntryValue, password: FormDataEntryValue) {
+  email = String(email);
+  password = String(password);
+  password = hash('sha1', password);
+  console.log(email, password)
+  return prisma.user.findFirst({
+    where: {
+      email,
+      password,
+    },
+  });
+}
+
+
+/**
  * Savoir si un utilisateur existe
  * @param id
  */
 export async function userExists(id: string) {
   const user = await prisma.user.findUnique({
-    where: { id },
+    where: {id},
   });
   return !!user;
 }
 
 /**
- * Créer un nouvel utilisateur
+ * Récupérer un utilisateur par son ID
  * @param userId
  */
 export async function getUserById(userId: string | null) {
   if (!userId) return null;
   return prisma.user.findUnique({
-    where: { id: userId },
+    where: {id: userId},
     include: {
       followers: true,
       following: true,
@@ -63,7 +102,7 @@ export async function getUsersByIds(userIds: string[]) {
  */
 export async function getUserByEmail(email: string) {
   return prisma.user.findUnique({
-    where: { email },
+    where: {email},
     include: {
       posts: true,
       followers: true,
@@ -87,7 +126,7 @@ export async function updateUser(
   }>
 ) {
   return prisma.user.update({
-    where: { id: userId },
+    where: {id: userId},
     data,
   });
 }
@@ -118,7 +157,7 @@ export async function createPost(data: {
  */
 export async function getPostById(postId: string) {
   return prisma.post.findUnique({
-    where: { id: postId },
+    where: {id: postId},
     include: {
       author: true,
       comments: true,
@@ -193,7 +232,7 @@ export async function getPostsByUser(
   const session = await serverSession()
   if (!session) return null;
   return prisma.post.findMany({
-    where: { authorId: userId },
+    where: {authorId: userId},
     skip,
     take,
     orderBy: {
@@ -213,7 +252,7 @@ export async function getPostsByUser(
           hashtag: true,
         },
       },
-      author:{
+      author: {
         include: {
           following: {
             where: {
@@ -259,7 +298,7 @@ export async function addComment(data: {
  */
 export async function getCommentsByPost(postId: string) {
   return prisma.comment.findMany({
-    where: { postId },
+    where: {postId},
     include: {
       author: true,
       likes: true,
@@ -291,7 +330,7 @@ export async function toggleLikePost(
   });
   if (like) {
     await prisma.like.delete({
-      where: { id: like.id },
+      where: {id: like.id},
     });
     return false;
   } else {
@@ -321,7 +360,7 @@ export async function toggleLikeComment(
   });
   if (like) {
     await prisma.like.delete({
-      where: { id: like.id },
+      where: {id: like.id},
     });
     return false;
   } else {
@@ -357,7 +396,7 @@ export async function toggleDislikePost(
   });
   if (dislike) {
     await prisma.dislike.delete({
-      where: { id: dislike.id },
+      where: {id: dislike.id},
     });
     return false;
   } else {
@@ -387,7 +426,7 @@ export async function toggleDislikeComment(
   });
   if (dislike) {
     await prisma.dislike.delete({
-      where: { id: dislike.id },
+      where: {id: dislike.id},
     });
     return false;
   } else {
@@ -422,10 +461,10 @@ export async function toggleFollowUser(
       followingId,
     },
   });
-
+  
   if (follow) {
     await prisma.follower.delete({
-      where: { id: follow.id },
+      where: {id: follow.id},
     });
     return false;
   } else {
@@ -442,7 +481,7 @@ export async function toggleFollowUser(
 
 export async function getFollowers(userId: string) {
   return prisma.follower.findMany({
-    where: { followingId: userId },
+    where: {followingId: userId},
     include: {
       follower: true,
       
@@ -453,7 +492,7 @@ export async function getFollowers(userId: string) {
 
 export async function getFollowing(userId: string) {
   return prisma.follower.findMany({
-    where: { followerId: userId },
+    where: {followerId: userId},
     include: {
       following: true,
     },
@@ -485,7 +524,7 @@ export async function createNotification(data: {
 
 export async function getNotificationsByUser(userId: string) {
   return prisma.notification.findMany({
-    where: { userId },
+    where: {userId},
     orderBy: {
       createdAt: 'desc',
     },
@@ -500,8 +539,8 @@ export async function markNotificationAsRead(
   notificationId: string
 ) {
   return prisma.notification.update({
-    where: { id: notificationId },
-    data: { isRead: true },
+    where: {id: notificationId},
+    data: {isRead: true},
   });
 }
 
@@ -517,9 +556,9 @@ export async function markNotificationAsRead(
 
 export async function upsertHashtag(name: string) {
   return prisma.hashtag.upsert({
-    where: { name },
+    where: {name},
     update: {},
-    create: { name },
+    create: {name},
   });
 }
 
@@ -585,6 +624,6 @@ export async function addMediaToPost(data: {
 
 export async function getMediaByPost(postId: string) {
   return prisma.media.findMany({
-    where: { postId },
+    where: {postId},
   });
 }

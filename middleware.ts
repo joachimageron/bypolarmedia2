@@ -6,7 +6,7 @@ import {getToken} from "next-auth/jwt";
 export async function middleware(req: NextRequest,) {
   const {pathname} = req.nextUrl;
   
-  if (pathname.startsWith('/auth/signin')) {
+  if (pathname.startsWith('/auth/signin') || pathname.startsWith('/auth/register')) {
     const token = await getToken({req, secret: process.env.SECRET});
     if (token) {
       console.log('token', token)
@@ -28,5 +28,5 @@ export async function middleware(req: NextRequest,) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/profil/:path*', "/auth/signin/:path*", "/"],
+  matcher: ['/profil/:path*', "/", "/auth/signin/:path*", "/auth/register/:path*"],
 }

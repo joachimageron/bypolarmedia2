@@ -1,6 +1,6 @@
 "use client";
 
-import {Image} from "@nextui-org/react";
+import {Avatar, Image} from "@nextui-org/react";
 import EditProfilButton from "@/app/profil/[userId]/EditProfilButton";
 import {useSession} from "next-auth/react";
 import {useState} from "react";
@@ -20,18 +20,16 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
   const [imageUrl, setImageUrl] = useState(userInfo?.image ?? undefined);
   const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>(userInfo?.bgImage ?? undefined);
   
+  console.log(userInfo);
+  
   return (
     <section className={"mt-5"}>
-      {backgroundUrl === "" && <div className={"mt-10"}/>}
-      <Image isBlurred src={backgroundUrl !== "" ? backgroundUrl : undefined} alt={"background image of the user"}/>
+      {!backgroundUrl && <div className={"pt-24"}/>}
+      <Image isBlurred src={backgroundUrl} alt={"background image of the user"} className={"-z-10"}/>
       <div className={"p-5"}>
         <div className={"flex justify-between items-end -mt-14"}>
-          <Image
-            className={"rounded-full h-28"}
-            src={imageUrl}
-            alt={"profile picture"}
-            fallbackSrc={"https://static.vecteezy.com/system/resources/thumbnails/008/846/297/small_2x/cute-boy-avatar-png.png"}
-          />
+          <Avatar showFallback className={"w-28 h-28"} src={imageUrl}/>
+          
           {session?.user.userId === userInfo?.id &&
              <EditProfilButton
                 description={description}

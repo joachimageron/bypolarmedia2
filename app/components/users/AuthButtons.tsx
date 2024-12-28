@@ -5,13 +5,13 @@ import {Button} from "@nextui-org/button";
 
 export function SignInButtonGitHub({children}: Readonly<{children: React.ReactNode;}>) {
   return (
-    <Button onPress={() => signIn("github")}>{children}</Button>
+    <Button className={"w-full"} onPress={() => signIn("github")}>{children}</Button>
   );
 }
 
 export function SignInButtonGoogle({children}: Readonly<{children: React.ReactNode;}>) {
   return (
-    <Button onPress={() => signIn("google")}>{children}</Button>
+    <Button className={"w-full"} onPress={() => signIn("google")}>{children}</Button>
   );
 }
 

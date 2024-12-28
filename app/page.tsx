@@ -3,8 +3,11 @@ import {PostContainer} from "@/app/components/posts/PostContainer";
 import {useEffect, useRef, useState} from "react";
 import {getAllPosts} from "@/utils/data";
 import {PostList} from "@/utils/types/data";
+import {useSession} from "next-auth/react";
 
 export default function Home() {
+  const {data: session} = useSession();
+  console.log(session);
   
   const [posts, setPosts] = useState<PostList>([]);
   const skip = useRef(0);

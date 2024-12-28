@@ -83,9 +83,9 @@ export default function EditProfilButton({
   }
   
   const testUrl = () => {
-    if (imageUrl === "") return false;
+    if (!imageUrl) return false;
     try {
-      new URL(imageUrl ?? "");
+      new URL(imageUrl);
       return false;
     } catch (e) {
       console.error(e);
