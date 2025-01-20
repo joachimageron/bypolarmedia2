@@ -58,7 +58,6 @@ export default function CreatePostButton() {
       if (!mediaCreated) {
         return;
       }
-      console.log("Media created", mediaCreated);
     }
     onOpenChange()
     setIsPosting(false);
@@ -67,9 +66,7 @@ export default function CreatePostButton() {
   }
   
   const handleSelectImage = (file: File) => {
-    console.log("coucou");
     setSelectedImageUrl(URL.createObjectURL(file));
-    console.log(file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
