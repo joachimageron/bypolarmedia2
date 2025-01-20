@@ -120,16 +120,20 @@ export default function EditProfilButton({
               <ModalHeader className="flex flex-col gap-1">Edit profil</ModalHeader>
               <Form onSubmit={handleUpdate}>
                 <ModalBody className={"w-full"}>
-                  <div className={"relative"}>
-                    <Image isBlurred src={selectedBackgroundUrl ?? backgroundUrl} alt={"background image of the user"} className={""}/>
-                    <UploadButton className={'h-fit absolute top-4 right-4 z-20'} onFileSelect={handleBackgroundImageSelect}>
-                      <Icon icon="material-symbols:edit-rounded" width="24" height="24" className={'z-20'} />
+                  <div className={"relative group"}>
+                    <Image isBlurred src={selectedBackgroundUrl ?? backgroundUrl} alt={"background image of the user"}
+                           className={""}/>
+                    <UploadButton className={'h-fit absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100'}
+                                  onFileSelect={handleBackgroundImageSelect}>
+                      <Icon icon="material-symbols:edit-rounded" width="35" height="35"
+                            className={'z-20 rounded-full shadow p-2 bg-default-100'}/>
                     </UploadButton>
                   </div>
-                  <div className={"flex justify-center items-center"}>
+                  <div className={"flex justify-center items-cente relative w-fit mx-auto"}>
                     <Avatar showFallback className={"w-28 h-28"} src={selectedProfileUrl ?? imageUrl}/>
-                    <UploadButton onFileSelect={handleProfileImageSelect}>
-                      <Icon icon="material-symbols:edit-rounded" width="24" height="24" />
+                    <UploadButton onFileSelect={handleProfileImageSelect} className={'absolute w-28 h-28 left-0 opacity-0 hover:opacity-100'}>
+                      <Icon icon="material-symbols:edit-rounded" width="35" height="35"
+                            className={'z-20 rounded-full shadow p-2 bg-default-100 mx-auto '}/>
                     </UploadButton>
                   </div>
                   <Textarea
