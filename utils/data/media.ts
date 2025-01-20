@@ -30,7 +30,7 @@ export async function addMediaToPost(data: {
   
   const uniqueFileName = `${session.user.userId}_${Date.now()}.${ext}`;
   
-  const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueFileName);
+  const uploadPath = path.join(process.cwd(), "public", "uploads", "posts", uniqueFileName);
   
   await fs.writeFile(uploadPath, buffer);
   

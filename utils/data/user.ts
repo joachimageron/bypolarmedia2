@@ -150,7 +150,7 @@ export async function updateUser(
       data.image = `/uploads/users/${uniqueFileName}`;
     }
     
-    if (data.bgImage === "dell") {data.bgImage = null;}
+    if (data.bgImage === "dell") {data.bgImage = undefined;}
     else if (typeof data.bgImage === 'string') {
       const buffer = Buffer.from(data.bgImage.replace(/^data:image\/\w+;base64,/, ""), "base64");
       
@@ -158,15 +158,14 @@ export async function updateUser(
       
       const uniqueFileName = `${userId}_${Date.now()}.${ext}`;
       
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueFileName);
+      const uploadPath = path.join(process.cwd(), "public", "uploads", "users", uniqueFileName);
       
       await fs.writeFile(uploadPath, buffer);
       
-      data.bgImage = `/uploads/${uniqueFileName}`;
+      data.bgImage = `/uploads/users/${uniqueFileName}`;
     }
     return await prisma.user.update({
       where: {id: userId},
-      // @ts-expect-error - Types are badly defined
       data,
     });
   } catch (error) {
