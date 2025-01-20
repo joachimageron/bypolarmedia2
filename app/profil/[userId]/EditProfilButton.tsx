@@ -19,21 +19,24 @@ import {useNotificationModal} from "@/app/components/providers/NotificationProvi
 import UploadButton from "@/app/components/UploadButton";
 import {Icon} from "@iconify/react";
 
-export default function EditProfilButton({
-  description,
-  imageUrl,
-  backgroundUrl,
-  setDescription,
-  setImageUrl,
-  setBackgroundUrl,
-}: Readonly<{
+type EditProfilButtonProps = {
   description: string | undefined,
   imageUrl: string | undefined,
   backgroundUrl: string | undefined,
   setDescription: (description: string | undefined) => void,
   setImageUrl: (imageUrl: string | undefined) => void,
   setBackgroundUrl: (backgroundUrl: string | undefined) => void,
-}>) {
+}
+
+export default function EditProfilButton({
+  description,
+  imageUrl,
+  backgroundUrl,
+  setDescription,
+  setImageUrl,
+  setBackgroundUrl
+}: Readonly<EditProfilButtonProps>) {
+  
   const {data: session} = useSession();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   
@@ -47,16 +50,19 @@ export default function EditProfilButton({
   const notification = useNotificationModal();
   
   useEffect(() => {
-    if (session?.user) {
-      setImageUrl(session?.user.image ?? "");
-      getUserById(session?.user.userId).then(user => {
-        if (user) {
-          setDescription(user.description ?? "");
-          setBackgroundUrl(user.bgImage ?? undefined);
-        }
-      });
-    }
-  }, [session]);
+      if (session?.user) {
+        setImageUrl(session?.user.image ?? "");
+        getUserById(session?.user.userId).then(user => {
+          if (user) {
+            setDescription(user.description ?? undefined);
+            setImageUrl(user.image ?? undefined);
+            setBackgroundUrl(user.bgImage ?? undefined);
+          }
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [session]);
   
   const handleUpdate = async (e: FormEvent) => {
     e.preventDefault();
@@ -82,12 +88,11 @@ export default function EditProfilButton({
       setSelectedProfileUrl(null);
       onOpenChange()
       setIsUpdating(false);
-      notification.showNotification("success", "Post created", "Your post has been created successfully");
+      notification.showNotification("success", "Profil updated", "Your profil has been updated successfully");
     } else {
       setIsUpdating(false);
-      notification.showNotification("error", "Error", "An error occured while creating the post");
+      notification.showNotification("error", "Error", "An error occured while updating your profil");
     }
-    
   }
   
   const handleProfileImageSelect = (file: File) => {
@@ -110,6 +115,15 @@ export default function EditProfilButton({
     }
   }
   
+  const handleRemoveImage = (e: FormEvent) => {
+    e.preventDefault();
+    console.log("remove image");
+    setSelectedProfileUrl(null);
+    selectedBackgroundImage.current = "dell";
+    setBackgroundUrl(undefined);
+    setSelectedBackgroundUrl(null);
+  }
+  
   return (
     <div className={"flex justify-center items-center"}>
       <Button color={"primary"} onPress={onOpen}>Edit Profil</Button>
@@ -120,18 +134,38 @@ export default function EditProfilButton({
               <ModalHeader className="flex flex-col gap-1">Edit profil</ModalHeader>
               <Form onSubmit={handleUpdate}>
                 <ModalBody className={"w-full"}>
-                  <div className={"relative group"}>
-                    <Image isBlurred src={selectedBackgroundUrl ?? backgroundUrl} alt={"background image of the user"}
-                           className={""}/>
-                    <UploadButton className={'h-fit absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100'}
-                                  onFileSelect={handleBackgroundImageSelect}>
-                      <Icon icon="material-symbols:edit-rounded" width="35" height="35"
-                            className={'z-20 rounded-full shadow p-2 bg-default-100'}/>
+                  {(!backgroundUrl && !selectedBackgroundUrl) && (
+                    <UploadButton
+                      onFileSelect={handleBackgroundImageSelect}
+                      className={'mx-auto flex justify-center items-center gap-3 mt-4 mb-12 hover:underline'}
+                    >
+                      <Icon icon="mdi:image-add" width="24" height="24" className={''}/>
+                      Add a background image
                     </UploadButton>
-                  </div>
-                  <div className={"flex justify-center items-cente relative w-fit mx-auto"}>
+                  )}
+                  {(backgroundUrl || selectedBackgroundUrl) && (
+                    <div className={"relative group"}>
+                      <Image isBlurred src={selectedBackgroundUrl ?? backgroundUrl} alt={"background image of the user"}
+                             className={""}/>
+                      <div className={'h-fit absolute top-4 right-4 z-20 flex flex-row gap-3'}>
+                        <UploadButton className={' opacity-0 group-hover:opacity-100'}
+                                      onFileSelect={handleBackgroundImageSelect}>
+                          <Icon icon="material-symbols:edit-rounded" width="35" height="35"
+                                className={'z-20 rounded-full shadow p-2 bg-default-100'}/>
+                        </UploadButton>
+                        <button onClick={handleRemoveImage} className={'h-fit opacity-0 group-hover:opacity-100'}>
+                          <Icon icon="fluent-emoji-high-contrast:cross-mark"
+                                width="34" height="34"
+                                className={'z-50 rounded-full shadow p-2 bg-default-100'}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <div className={"flex justify-center items-cente relative w-fit -mt-12 ml-3 z-30"}>
                     <Avatar showFallback className={"w-28 h-28"} src={selectedProfileUrl ?? imageUrl}/>
-                    <UploadButton onFileSelect={handleProfileImageSelect} className={'absolute w-28 h-28 left-0 opacity-0 hover:opacity-100'}>
+                    <UploadButton onFileSelect={handleProfileImageSelect}
+                                  className={'absolute w-28 h-28 left-0 opacity-0 hover:opacity-100'}>
                       <Icon icon="material-symbols:edit-rounded" width="35" height="35"
                             className={'z-20 rounded-full shadow p-2 bg-default-100 mx-auto '}/>
                     </UploadButton>
@@ -141,7 +175,7 @@ export default function EditProfilButton({
                     variant="bordered"
                     label={"Description"}
                     placeholder="A wonderfull description"
-                    className={"w-full"}
+                    className={"w-full mt-3"}
                     defaultValue={description}
                   />
                 </ModalBody>

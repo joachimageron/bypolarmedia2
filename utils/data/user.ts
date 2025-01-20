@@ -129,7 +129,9 @@ export async function updateUser(
   
   try {
     
-    if(data.image) {
+    console.log(data);
+    
+    if (data.image) {
       const buffer = Buffer.from(data.image.replace(/^data:image\/\w+;base64,/, ""), "base64");
       
       // Détermine l'extension du fichier
@@ -145,36 +147,27 @@ export async function updateUser(
       await fs.writeFile(uploadPath, buffer);
       
       // Génère l'URL publique de l'image
-      data.image = `/uploads/${uniqueFileName}`;
+      data.image = `/uploads/users/${uniqueFileName}`;
     }
     
-    if (data.bgImage) {
-      
+    if (data.bgImage === "dell") {data.bgImage = null;}
+    else if (typeof data.bgImage === 'string') {
       const buffer = Buffer.from(data.bgImage.replace(/^data:image\/\w+;base64,/, ""), "base64");
       
-      // Détermine l'extension du fichier
       const ext = /^data:(image\/\w+);base64,/.exec(data.bgImage)?.[1].split('/')[1] ?? 'png';
       
-      // Génère un nom de fichier unique
       const uniqueFileName = `${userId}_${Date.now()}.${ext}`;
       
-      // Définit le chemin de sauvegarde
       const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueFileName);
       
-      // Sauvegarde le fichier
       await fs.writeFile(uploadPath, buffer);
       
-      // Génère l'URL publique de l'image
       data.bgImage = `/uploads/${uniqueFileName}`;
     }
-    // Décode les données base64
-    
-    console.log(data);
-    
-    // Met à jour l'utilisateur dans la base de données
     return await prisma.user.update({
       where: {id: userId},
-      data
+      // @ts-expect-error - Types are badly defined
+      data,
     });
   } catch (error) {
     console.error("Erreur lors du téléchargement de l'image:", error);

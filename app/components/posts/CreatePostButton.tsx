@@ -8,33 +8,33 @@ import {
   Button,
   useDisclosure,
   Textarea,
-  Input
+  Image
 } from "@nextui-org/react";
 import PlusIcon from "@/app/components/icons/PlusIcon";
 import {createPost} from "@/utils/data/post";
 import {addMediaToPost} from "@/utils/data/media"
-import {useMemo, useState} from "react";
+import {useRef, useState} from "react";
 import {useSession} from "next-auth/react";
 import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
+import UploadButton from "@/app/components/UploadButton";
+import {Icon} from "@iconify/react";
 
 export default function CreatePostButton() {
   const {data: session} = useSession();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [content, setContent] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | undefined>();
   const [isPosting, setIsPosting] = useState(false);
+  
+  const selectedImage = useRef<string | undefined>()
   
   const notification = useNotificationModal();
   
   const handlePost = async () => {
     // Post
-    if (content === "" && imageUrl === "") {
+    if (content === "" && selectedImageUrl === "") {
       notification.showNotification("error", "Invalid post", "Please fill one of the fields");
       return;
-    }
-    if (testUrl()) {
-      notification.showNotification("error", "Invalid URL", "Please enter a valid URL");
-      return
     }
     setIsPosting(true);
     if (!session) return;
@@ -49,11 +49,11 @@ export default function CreatePostButton() {
       return
     }
     
-    if (imageUrl){
+    if (selectedImageUrl) {
       const mediaCreated = await addMediaToPost({
         postId: postCreated.id,
         type: "image",
-        url: imageUrl,
+        imageData: selectedImage.current,
       });
       if (!mediaCreated) {
         return;
@@ -66,19 +66,21 @@ export default function CreatePostButton() {
     
   }
   
-  const testUrl = () => {
-    if (imageUrl === "") return false;
-    try {
-      new URL(imageUrl);
-      return false;
-    } catch (e) {
-      return true;
+  const handleSelectImage = (file: File) => {
+    console.log("coucou");
+    setSelectedImageUrl(URL.createObjectURL(file));
+    console.log(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+      selectedImage.current = reader.result as string;
     }
   }
   
-  const isInvalidUrl = useMemo(() => {
-    return testUrl();
-  }, [imageUrl]);
+  const handleRemoveImage = () => {
+    setSelectedImageUrl(undefined);
+    selectedImage.current = undefined;
+  }
   
   return (
     <div className={"flex justify-center items-center"}>
@@ -97,30 +99,50 @@ export default function CreatePostButton() {
                   value={content}
                   onValueChange={setContent}
                 />
-                <Input
-                  variant="bordered"
-                  label={"Image Url"}
-                  placeholder="https://example.com/image.jpg"
-                  className={"w-full"}
-                  value={imageUrl}
-                  onValueChange={setImageUrl}
-                  isInvalid={isInvalidUrl}
-                  color={isInvalidUrl ? "danger" : "default"}
-                  errorMessage={isInvalidUrl ? "Invalid URL" : ""}
-                />
+                {!selectedImageUrl && (
+                  <UploadButton onFileSelect={handleSelectImage} className={'mx-auto flex justify-center items-center gap-3 mt-4 hover:underline'}>
+                    <Icon icon="mdi:image-add" width="24" height="24" className={''}/>
+                    Add an image
+                  </UploadButton>
+                )}
+                {selectedImageUrl && (
+                  <div className={"relative group"}>
+                    <Image src={selectedImageUrl} alt={"Selected image"} className={"w-full"}/>
+                    <div className={"absolute z-20 top-4 right-4 flex flex-row gap-3"}>
+                      <UploadButton
+                        className={'h-fit opacity-0 group-hover:opacity-100'}
+                        onFileSelect={handleSelectImage}
+                      >
+                        <Icon
+                          icon="material-symbols:edit-rounded"
+                          width="35" height="35"
+                          className={'z-50 rounded-full shadow p-2 bg-default-100'}
+                        />
+                      </UploadButton>
+                      <button onClick={handleRemoveImage} className={'h-fit opacity-0 group-hover:opacity-100'}>
+                        <Icon icon="fluent-emoji-high-contrast:cross-mark"
+                              width="34" height="34"
+                              className={'z-50 rounded-full shadow p-2 bg-default-100'}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" onPress={onClose}>
                   Close
                 </Button>
-                <Button isLoading={isPosting} color="primary" onPress={()=>handlePost()}>
+                <Button isLoading={isPosting} color="primary" onPress={() => handlePost()}>
                   Post
                 </Button>
               </ModalFooter>
             </>
-          )}
+          )
+          }
         </ModalContent>
       </Modal>
     </div>
-  );
+  )
+    ;
 }
