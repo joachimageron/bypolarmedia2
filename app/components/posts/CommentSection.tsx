@@ -1,5 +1,5 @@
 import {
-Input, Button, Divider, Form, Spinner,
+Input, Button, Form, Spinner,
 } from "@nextui-org/react";
 import {CommentsByPost, PostExtended} from "@/utils/types/data";
 import {addComment, getCommentsByPost} from "@/utils/data/comment";
@@ -45,9 +45,9 @@ export default function CommentSection({post}: Readonly<{
   
   return (
       <div className={"w-full"}>
-        <Divider className={"mt-5"}/>
-        <h4 className="text-small text-center font-semibold leading-none text-default-500 my-2">Comments</h4>
-        <ul className={"overflow-y-scroll max-h-96"}>
+        
+        {/*<h4 className="text-small text-center font-semibold leading-none text-default-500 my-2">Comments</h4>*/}
+        <ul className={"overflow-y-scroll max-h-96 mt-5"}>
           {!comments &&
             <div className={"w-full flex flex-col items-center"}>
               <Spinner className={"mt-3"}/>
