@@ -8,7 +8,7 @@ import {
 } from "@nextui-org/react";
 import {UserById} from "@/utils/types/data";
 import {useEffect, useState} from "react";
-import {getUsersByIds} from "@/utils/data";
+import {getUsersByIds} from "@/utils/data/user";
 import Link from "next/link";
 import FollowButton from "@/app/components/users/FollowButton";
 import {useSession} from "next-auth/react";
