@@ -25,9 +25,9 @@ export default async function NavigationBar() {
                 <div className={"w-7"}>
                   <CreatePostButton/>
                 </div>
-                <div className={"w-7"}>
+                <Link href={`/profil/${session.user.userId}`} className={"w-7"}>
                   <UserAvatarMenu/>
-                </div>
+                </Link>
               
               </>
             ) :
