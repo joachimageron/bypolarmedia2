@@ -20,12 +20,10 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
   const [imageUrl, setImageUrl] = useState(userInfo?.image ?? undefined);
   const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>(userInfo?.bgImage ?? undefined);
   
-  console.log(userInfo);
-  
   return (
     <section className={"mt-5"}>
       {!backgroundUrl && <div className={"pt-24"}/>}
-      <Image isBlurred src={backgroundUrl} alt={"background image of the user"} className={"-z-10"}/>
+      <Image isBlurred src={backgroundUrl} alt={"background image of the user"} className={"-z-10"} />
       <div className={"p-5"}>
         <div className={"flex justify-between items-end -mt-14"}>
           <Avatar showFallback className={"w-28 h-28"} src={imageUrl}/>

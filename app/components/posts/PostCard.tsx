@@ -12,7 +12,8 @@ import {
 import {useState} from "react";
 import {PostExtended} from "@/utils/types/data";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
-import {toggleDislikePost, toggleLikePost} from "@/utils/data";
+import {toggleDislikePost} from "@/utils/data/dislike";
+import {toggleLikePost} from "@/utils/data/like"
 import CommentSection from "@/app/components/posts/CommentSection";
 import FollowButton from "@/app/components/users/FollowButton";
 import {useSession} from "next-auth/react";

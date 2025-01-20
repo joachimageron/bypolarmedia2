@@ -1,7 +1,7 @@
 "use client";
 import {PostContainer} from "@/app/components/posts/PostContainer";
 import {useEffect, useRef, useState} from "react";
-import {getAllPosts} from "@/utils/data";
+import {getAllPosts} from "@/utils/data/post";
 import {PostList} from "@/utils/types/data";
 import {useSession} from "next-auth/react";
 

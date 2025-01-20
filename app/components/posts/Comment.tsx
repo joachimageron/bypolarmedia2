@@ -3,7 +3,8 @@ import {Avatar} from "@nextui-org/react";
 import Link from "next/link";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
 import {useState} from "react";
-import {toggleDislikeComment, toggleLikeComment} from "@/utils/data";
+import {toggleLikeComment} from "@/utils/data/like";
+import {toggleDislikeComment} from "@/utils/data/dislike";
 import ThumbUpIcon from "@/app/components/icons/ThumbUpIcon";
 
 

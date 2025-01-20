@@ -4,7 +4,7 @@ import React from "react";
 import {Button, Input, Link, Form, Divider} from "@nextui-org/react";
 import {Icon} from "@iconify/react";
 import {signIn} from "next-auth/react";
-import {createUser} from "@/utils/data";
+import {createUser} from "@/utils/data/user";
 
 export default function Page() {
   const [isVisible, setIsVisible] = React.useState(false);

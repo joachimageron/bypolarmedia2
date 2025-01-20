@@ -1,6 +1,6 @@
 import {Button} from "@nextui-org/react";
 import {useState} from "react";
-import {toggleFollowUser} from "@/utils/data";
+import {toggleFollowUser} from "@/utils/data/follower";
 import {useSession} from "next-auth/react";
 
 type FollowButtonProps = {

@@ -2,7 +2,7 @@
 import {PostContainer} from "@/app/components/posts/PostContainer";
 import {useEffect, useRef, useState} from "react";
 import {PostList, UserById} from "@/utils/types/data";
-import {getPostsByUser} from "@/utils/data";
+import {getPostsByUser} from "@/utils/data/post";
 
 export default function ProfilPostContainer({userInfo}: Readonly<{ userInfo: UserById }>) {
   

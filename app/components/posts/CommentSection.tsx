@@ -2,7 +2,7 @@ import {
 Input, Button, Divider, Form, Spinner,
 } from "@nextui-org/react";
 import {CommentsByPost, PostExtended} from "@/utils/types/data";
-import {addComment, getCommentsByPost} from "@/utils/data";
+import {addComment, getCommentsByPost} from "@/utils/data/comment";
 import {FormEvent, useEffect, useState} from "react";
 import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
 import {useSession} from "next-auth/react";

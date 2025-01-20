@@ -4,7 +4,7 @@ import {prisma} from "@/prisma/prisma"
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {verifyUserCredentials} from "@/utils/data";
+import {verifyUserCredentials} from "@/utils/data/user";
 
 const githubId = process.env.GITHUB_ID;
 const githubSecret = process.env.GITHUB_SECRET;
@@ -64,6 +64,7 @@ const authOptions: NextAuthOptions = {
       if (account) {
         token.accessToken = account.access_token
         token.userId = user?.id
+        token.image = null
       }
       return token
     },

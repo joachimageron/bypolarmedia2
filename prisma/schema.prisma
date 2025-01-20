@@ -12,12 +12,12 @@ model User {
   name           String?
   email          String?         @unique
   emailVerified  DateTime?
-  password       String?
   image          String?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   description    String?
   bgImage        String?
+  password       String?
   accounts       Account[]
   authenticators Authenticator[]
   comments       Comment[]
