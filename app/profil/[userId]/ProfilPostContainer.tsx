@@ -1,8 +1,10 @@
 "use client";
-import {PostContainer} from "@/app/components/posts/PostContainer";
 import {useEffect, useRef, useState} from "react";
 import {PostList, UserById} from "@/utils/types/data";
 import {getPostsByUser} from "@/utils/data/post";
+import PostCard from "@/app/components/posts/PostCard";
+import {generateRandomKey} from "@/utils/utils";
+import {Spinner} from "@nextui-org/react";
 
 export default function ProfilPostContainer({userInfo}: Readonly<{ userInfo: UserById }>) {
   
@@ -59,7 +61,31 @@ export default function ProfilPostContainer({userInfo}: Readonly<{ userInfo: Use
   
   return (
     <main className={"m-auto max-w-xl mb-20"}>
-      <PostContainer posts={posts} isLoading={isLoading} displayFollow={false}/>
-    </main>
+      <ul>
+        <ul>
+          {posts?.map(post => (
+            <PostCard key={post.id + generateRandomKey()} post={post} displayFollow={false}/>
+          ))}
+        </ul>
+        
+        {isLoading === true &&
+           <div className={"w-full flex flex-col items-center"}>
+              <Spinner className={"mt-3"}/>
+           </div>
+        }
+        
+        {isLoading === "loaded" &&
+           <div className={"w-full flex flex-col items-center"}>
+             {posts.length === 0 ? (
+               <p className={"mt-3 text-default-500"}>No posts to show</p>
+             ) : (
+               <p className={"mt-3 text-default-500"}>No more posts to show</p>
+             )
+             }
+
+           </div>
+        }
+      
+      </ul>    </main>
   );
 }
