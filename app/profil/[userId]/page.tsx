@@ -5,7 +5,7 @@ import {Divider} from "@nextui-org/react";
 import ProfilPostContainer from "@/app/profil/[userId]/ProfilPostContainer";
 
 interface ProfilePageProps {
-  params: { userId: string }; // TypeScript : définissez le type des paramètres
+  params: Promise<{ userId: string }>; // TypeScript : définissez le type des paramètres
 }
 
 export default async function Profil({params}: Readonly<ProfilePageProps>) {
