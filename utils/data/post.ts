@@ -87,6 +87,7 @@ export async function getAllPosts(skip: number = 0, take: number = 10) {
     },
   });
 }
+
 /**
  * Récupérer toutes les publications d'un utilisateur
  * @param userId
@@ -134,3 +135,138 @@ export async function getPostsByUser(
     },
   });
 }
+
+/**
+ * Récupérer toutes les publications suivies par un utilisateur
+ * @param skip
+ * @param take
+ */
+
+
+export async function getFollowedPosts(skip: number = 0, take: number = 10) {
+  const session = await serverSession();
+  if (!session) return null;
+  
+  const followingIds = await prisma.follower.findMany({
+    where: {
+      followerId: session.user.userId,
+    },
+    select: {followingId: true},
+  });
+  
+  return prisma.post.findMany({
+    where: {
+      authorId: {
+        in: followingIds.map(f => f.followingId),
+      },
+    },
+    skip,
+    take,
+    orderBy: {
+      createdAt: Prisma.SortOrder.desc,
+    },
+    include: {
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+      likes: true,
+      dislikes: true,
+      media: true,
+      hashtags: {
+        include: {
+          hashtag: true,
+        },
+      },
+      author: {
+        include: {
+          following: true
+        }
+      },
+    },
+  });
+}
+
+/**
+ * Récupérer toutes les publications non suivies par un utilisateur
+ * @param skip
+ * @param take
+ */
+
+export async function getNotFollowedPosts(skip: number = 0, take: number = 10) {
+  const session = await serverSession();
+  if (!session) return null;
+  
+  const followingIds = await prisma.follower.findMany({
+    where: {
+      followerId: session.user.userId,
+    },
+    select: {followingId: true},
+  });
+  
+  console.log('followingIds', followingIds);
+  
+  if (followingIds.length === 0) {
+    return prisma.post.findMany({
+      skip,
+      take,
+      orderBy: {
+        createdAt: Prisma.SortOrder.desc,
+      },
+      include: {
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+        likes: true,
+        dislikes: true,
+        media: true,
+        hashtags: {
+          include: {
+            hashtag: true,
+          },
+        },
+        author: {
+          include: {
+            following: true
+          }
+        },
+      },
+    });
+  }
+  return prisma.post.findMany({
+    where: {
+      authorId: {
+        notIn: followingIds.map(f => f.followingId),
+      },
+    },
+    skip,
+    take,
+    orderBy: {
+      createdAt: Prisma.SortOrder.desc,
+    },
+    include: {
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+      likes: true,
+      dislikes: true,
+      media: true,
+      hashtags: {
+        include: {
+          hashtag: true,
+        },
+      },
+      author: {
+        include: {
+          following: true
+        }
+      },
+    },
+  });
+}
+

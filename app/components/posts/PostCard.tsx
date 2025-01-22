@@ -7,7 +7,7 @@ import {
   Avatar,
   Divider,
   Image,
-
+  
 } from "@nextui-org/react";
 import {useState} from "react";
 import {PostExtended} from "@/utils/types/data";
@@ -57,7 +57,9 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
           </div>
         </Link>
         {data && data.user.userId !== post.author.id && displayFollow && (
-          <FollowButton followed={post.author.following.length>0} followingId={post.author.id}/>
+          <FollowButton
+            followed={post.author.following.filter(f => f.followerId === data.user.userId).length > 0}
+            followingId={post.author.id}/>
         )
         }
       
@@ -88,7 +90,7 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
             Error loading image
           </p>
         )}
-        
+      
       </CardBody>
       <Divider className={""}/>
       <CardFooter className="p-4 flex-col items-start">
@@ -105,10 +107,11 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
               <ThumbDownIcon className={isDisliked ? "w-5 fill-danger" : "w-5 fill-default-900"}/>
             </button>
           </div>
-          <button onClick={() => setCommentOpen(!commentOpen)} className={"ml-2 flex gap-1 text-small text-default-500 underline"}>
+          <button onClick={() => setCommentOpen(!commentOpen)}
+                  className={"ml-2 flex gap-1 text-small text-default-500 underline"}>
             {commentOpen ? (
               <p>Hide</p>
-            ): (
+            ) : (
               <p className="">
                 {post._count.comments} comment{post._count.comments > 1 ? "s" : ""}
               </p>
