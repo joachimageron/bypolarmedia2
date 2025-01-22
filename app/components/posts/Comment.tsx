@@ -30,7 +30,7 @@ export default function Comment({comment}: Readonly<{ comment: CommentByPost }>)
   }
   
   return (
-    <div className={"py-3 rounded-medium w-full"}>
+    <div className={"py-2 rounded-medium w-full"}>
       <div className={"flex justify-between gap-3"}>
         <div className={"flex gap-3"}>
           <Link href={comment.author.id} className={"flex gap-3"}>
