@@ -1,24 +1,28 @@
 "use client";
 
 import {Listbox, ListboxItem, Avatar, Tooltip} from "@heroui/react";
-import {signOut, useSession} from "next-auth/react";
+import {signOut} from "next-auth/react";
 import {Key} from "react";
 import {useRouter} from "next/navigation";
+import {useUser} from "@/app/components/providers/UserProvider";
 
 export default function UserAvatarMenu() {
-  const {data: session} = useSession();
+  const {user} = useUser();
   const router = useRouter();
+  
   
   const handleAction = (key: Key) => {
     switch (key) {
       case "profil":
-        router.push("/profil/" + session?.user.userId);
+        router.push("/profil/" + user?.id);
         break;
       case "signout":
         signOut();
         break;
     }
   }
+  
+  console.log(user);
   
   return (
     <Tooltip
@@ -35,7 +39,10 @@ export default function UserAvatarMenu() {
           </Listbox>
         </div>
       }>
-      <Avatar showFallback className={"hover:cursor-pointer w-7 h-7"} src={session?.user.image ?? undefined}/>
+      
+      { user &&
+        <Avatar showFallback className={"hover:cursor-pointer w-7 h-7"} src={user?.image ?? undefined}/>
+      }
     </Tooltip>
   
   

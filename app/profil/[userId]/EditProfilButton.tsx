@@ -12,36 +12,24 @@ import {
   Textarea,
   useDisclosure
 } from "@heroui/react";
-import {getUserById, updateUser} from "@/utils/data/user";
-import {FormEvent, useEffect, useRef, useState} from "react";
+import {updateUser} from "@/utils/data/user";
+import {FormEvent, useRef, useState} from "react";
 import {useSession} from "next-auth/react";
 import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
 import UploadButton from "@/app/components/UploadButton";
 import {Icon} from "@iconify/react";
+import {useUser} from "@/app/components/providers/UserProvider";
 
-type EditProfilButtonProps = {
-  description: string | undefined,
-  imageUrl: string | undefined,
-  backgroundUrl: string | undefined,
-  setDescription: (description: string | undefined) => void,
-  setImageUrl: (imageUrl: string | undefined) => void,
-  setBackgroundUrl: (backgroundUrl: string | undefined) => void,
-}
 
-export default function EditProfilButton({
-  description,
-  imageUrl,
-  backgroundUrl,
-  setDescription,
-  setImageUrl,
-  setBackgroundUrl
-}: Readonly<EditProfilButtonProps>) {
+
+export default function EditProfilButton() {
   
   const {data: session} = useSession();
+  const {user, setUser} = useUser();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   
-  const [selectedProfileUrl, setSelectedProfileUrl] = useState<string | null>(null);
-  const [selectedBackgroundUrl, setSelectedBackgroundUrl] = useState<string | null>(null);
+  const [profileUrl, setProfileUrl] = useState<string | undefined>(user?.image ?? undefined);
+  const [backgroundUrl, setBackgroundUrl] = useState<string | undefined>(user?.bgImage ?? undefined);
   const [isUpdating, setIsUpdating] = useState(false);
   
   const selectedProfileImage = useRef<string | undefined>();
@@ -49,20 +37,7 @@ export default function EditProfilButton({
   
   const notification = useNotificationModal();
   
-  useEffect(() => {
-      if (session?.user) {
-        setImageUrl(session?.user.image ?? "");
-        getUserById(session?.user.userId).then(user => {
-          if (user) {
-            setDescription(user.description ?? undefined);
-            setImageUrl(user.image ?? undefined);
-            setBackgroundUrl(user.bgImage ?? undefined);
-          }
-        });
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [session]);
+  
   
   const handleUpdate = async (e: FormEvent) => {
     e.preventDefault();
@@ -81,11 +56,12 @@ export default function EditProfilButton({
     const res = await updateUser(session?.user.userId, data);
     
     if (res) {
-      setImageUrl(res.image ?? undefined);
-      setDescription(res.description ?? undefined);
-      setBackgroundUrl(res.bgImage ?? undefined);
-      setSelectedBackgroundUrl(null);
-      setSelectedProfileUrl(null);
+      setUser(prevUser => ({
+        ...prevUser,
+        ...res,
+        following: prevUser!.following,
+        followers: prevUser!.followers,
+      }));
       onOpenChange()
       setIsUpdating(false);
       notification.showNotification("success", "Profil updated", "Your profil has been updated successfully");
@@ -96,7 +72,7 @@ export default function EditProfilButton({
   }
   
   const handleProfileImageSelect = (file: File) => {
-    setSelectedProfileUrl(URL.createObjectURL(file));
+    setProfileUrl(URL.createObjectURL(file));
     
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -106,7 +82,7 @@ export default function EditProfilButton({
   }
   
   const handleBackgroundImageSelect = (file: File) => {
-    setSelectedBackgroundUrl(URL.createObjectURL(file));
+    setBackgroundUrl(URL.createObjectURL(file));
     
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -117,10 +93,10 @@ export default function EditProfilButton({
   
   const handleRemoveImage = (e: FormEvent) => {
     e.preventDefault();
-    setSelectedProfileUrl(null);
+    setProfileUrl(undefined);
     selectedBackgroundImage.current = "dell";
     setBackgroundUrl(undefined);
-    setSelectedBackgroundUrl(null);
+    setBackgroundUrl(undefined);
   }
   
   return (
@@ -133,7 +109,7 @@ export default function EditProfilButton({
               <ModalHeader className="flex flex-col gap-1">Edit profil</ModalHeader>
               <Form onSubmit={handleUpdate}>
                 <ModalBody className={"w-full"}>
-                  {(!backgroundUrl && !selectedBackgroundUrl) && (
+                  {!backgroundUrl && (
                     <UploadButton
                       onFileSelect={handleBackgroundImageSelect}
                       className={'mx-auto flex justify-center items-center gap-3 mt-4 mb-12 hover:underline'}
@@ -142,9 +118,9 @@ export default function EditProfilButton({
                       Add a background image
                     </UploadButton>
                   )}
-                  {(backgroundUrl || selectedBackgroundUrl) && (
+                  {backgroundUrl && (
                     <div className={"relative group"}>
-                      <Image isBlurred src={selectedBackgroundUrl ?? backgroundUrl} alt={"background image of the user"}
+                      <Image isBlurred src={backgroundUrl ?? backgroundUrl} alt={"background image of the user"}
                              className={""}/>
                       <div className={'h-fit absolute top-4 right-4 z-20 flex flex-row gap-3'}>
                         <UploadButton className={' opacity-0 group-hover:opacity-100'}
@@ -162,7 +138,7 @@ export default function EditProfilButton({
                     </div>
                   )}
                   <div className={"flex justify-center items-cente relative w-fit -mt-12 ml-3 z-30"}>
-                    <Avatar showFallback className={"w-28 h-28"} src={selectedProfileUrl ?? imageUrl}/>
+                    <Avatar showFallback className={"w-28 h-28"} src={profileUrl}/>
                     <UploadButton onFileSelect={handleProfileImageSelect}
                                   className={'absolute w-28 h-28 left-0 opacity-0 hover:opacity-100'}>
                       <Icon icon="material-symbols:edit-rounded" width="35" height="35"
@@ -175,7 +151,7 @@ export default function EditProfilButton({
                     label={"Description"}
                     placeholder="A wonderfull description"
                     className={"w-full mt-3"}
-                    defaultValue={description}
+                    defaultValue={user?.description ?? undefined}
                   />
                 </ModalBody>
                 <ModalFooter className={"w-full"}>

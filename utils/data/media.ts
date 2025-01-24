@@ -48,7 +48,6 @@ export async function addMediaToPost(data: {
       access: "public",
     });
     fileUrl = result.url; // URL stockée chez Vercel Blob
-    console.log(result);
   } else {
     // En dev, on continue éventuellement à stocker en local
     const uploadPath = path.join(process.cwd(), "public", "uploads", "posts", uniqueFileName);

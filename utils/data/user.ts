@@ -73,6 +73,7 @@ export async function getUserById(userId: string | null) {
     },
   });
 }
+export type GetUserByIdReturnType = Awaited<ReturnType<typeof getUserById>>;
 
 /**
  * Récupérer les informations de plusieurs utilisateurs à partir d'une liste d'IDs

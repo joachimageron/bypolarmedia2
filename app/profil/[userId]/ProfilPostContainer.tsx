@@ -1,12 +1,13 @@
 "use client";
 import {useEffect, useRef, useState} from "react";
-import {PostList, UserById} from "@/utils/types/data";
+import {PostList} from "@/utils/types/data";
 import {getPostsByUser} from "@/utils/data/post";
 import PostCard from "@/app/components/posts/PostCard";
 import {generateRandomKey} from "@/utils/utils";
 import {Spinner} from "@heroui/react";
+import {GetUserByIdReturnType} from "@/utils/data/user";
 
-export default function ProfilPostContainer({userInfo}: Readonly<{ userInfo: UserById }>) {
+export default function ProfilPostContainer({userInfo}: Readonly<{ userInfo: GetUserByIdReturnType }>) {
   
   const [posts, setPosts] = useState<PostList>([]);
   const skip = useRef(0);
