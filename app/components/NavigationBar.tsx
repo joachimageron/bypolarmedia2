@@ -1,11 +1,11 @@
 import Link from "next/link";
 import HomeIcon from "./icons/HomeIcon";
-import SearchIcon from "./icons/SearchIcon";
 import CreatePostButton from "@/app/components/posts/CreatePostButton";
 import UserAvatarMenu from "@/app/components/users/UserAvataMenu";
 import DarkModeSwitch from "@/app/components/DarkModeSwitch";
 import {serverSession} from "@/utils/auth";
 import ProfilIcon from "@/app/components/icons/ProfilIcon";
+import SearchButton from "@/app/components/SearchButton";
 
 
 export default async function NavigationBar() {
@@ -19,9 +19,9 @@ export default async function NavigationBar() {
                 <Link href={"/"} className={"w-7"}>
                   <HomeIcon className={"fill-zinc-50"}/>
                 </Link>
-                <Link href={"/search"} className={"w-7"}>
-                  <SearchIcon className={"fill-zinc-50"}/>
-                </Link>
+                <div className={"w-7"}>
+                  <SearchButton/>
+                </div>
                 <div className={"w-7"}>
                   <CreatePostButton/>
                 </div>

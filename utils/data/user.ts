@@ -96,6 +96,31 @@ export async function getUsersByIds(userIds: string[]) {
   });
 }
 
+/**
+ * Rechercher des utilisateurs par leur nom ou email
+ * @param query
+ */
+export async function getSearchUsers(query: string) {
+  return prisma.user.findMany({
+    take: 5,
+    where: {
+      OR: [
+        {
+          name: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+        {
+          email: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
+  });
+}
 
 /**
  * Récupérer un utilisateur par son email
