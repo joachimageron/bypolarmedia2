@@ -5,7 +5,7 @@ import {
   ModalHeader,
   ModalBody,
   useDisclosure, Avatar, Divider, Spinner,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {UserById} from "@/utils/types/data";
 import {useEffect, useState} from "react";
 import {getUsersByIds} from "@/utils/data/user";

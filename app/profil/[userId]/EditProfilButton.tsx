@@ -11,7 +11,7 @@ import {
   ModalHeader,
   Textarea,
   useDisclosure
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {getUserById, updateUser} from "@/utils/data/user";
 import {FormEvent, useEffect, useRef, useState} from "react";
 import {useSession} from "next-auth/react";

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import {Button, Input, Link, Form, Divider} from "@nextui-org/react";
+import {Button, Input, Link, Form, Divider} from "@heroui/react";
 import {Icon} from "@iconify/react";
 import {signIn} from "next-auth/react";
 import {createUser} from "@/utils/data/user";

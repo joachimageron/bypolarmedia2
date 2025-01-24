@@ -4,7 +4,7 @@ import {getFollowedPosts, getNotFollowedPosts} from "@/utils/data/post";
 import {PostList} from "@/utils/types/data";
 import PostCard from "@/app/components/posts/PostCard";
 import {generateRandomKey} from "@/utils/utils";
-import {Divider, Spinner} from "@nextui-org/react";
+import {Divider, Spinner} from "@heroui/react";
 
 export default function Home() {
   

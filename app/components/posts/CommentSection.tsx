@@ -1,6 +1,6 @@
 import {
 Input, Button, Form, Spinner,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {CommentsByPost, PostExtended} from "@/utils/types/data";
 import {addComment, getCommentsByPost} from "@/utils/data/comment";
 import {FormEvent, useEffect, useState} from "react";
@@ -38,7 +38,7 @@ export default function CommentSection({post}: Readonly<{
       notification.showNotification("error", "Error", "Error adding comment")
     } else {
       setCommentContent("")
-      setComments([...comments ?? [], commented])
+      setComments([...(comments ?? []), commented])
     }
     setCommentLoading(false);
   }

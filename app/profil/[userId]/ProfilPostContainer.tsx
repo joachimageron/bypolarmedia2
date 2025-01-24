@@ -4,7 +4,7 @@ import {PostList, UserById} from "@/utils/types/data";
 import {getPostsByUser} from "@/utils/data/post";
 import PostCard from "@/app/components/posts/PostCard";
 import {generateRandomKey} from "@/utils/utils";
-import {Spinner} from "@nextui-org/react";
+import {Spinner} from "@heroui/react";
 
 export default function ProfilPostContainer({userInfo}: Readonly<{ userInfo: UserById }>) {
   

@@ -1,6 +1,6 @@
 "use client";
 import {signIn, signOut} from "next-auth/react";
-import {Button} from "@nextui-org/button";
+import {Button} from "@heroui/button";
 
 
 export function SignInButtonGitHub({children}: Readonly<{children: React.ReactNode;}>) {

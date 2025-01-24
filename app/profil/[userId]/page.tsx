@@ -1,7 +1,7 @@
 import {getUserById, userExists} from "@/utils/data/user";
 import {notFound} from "next/navigation";
 import ProfilHeader from "@/app/profil/[userId]/ProfilHeader";
-import {Divider} from "@nextui-org/react";
+import {Divider} from "@heroui/react";
 import ProfilPostContainer from "@/app/profil/[userId]/ProfilPostContainer";
 
 interface ProfilePageProps {

@@ -8,7 +8,7 @@ import {
   Divider,
   Image,
   
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {useState} from "react";
 import {PostExtended} from "@/utils/types/data";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";

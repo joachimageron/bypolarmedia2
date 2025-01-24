@@ -9,7 +9,7 @@ import {
   useDisclosure,
   Textarea,
   Image
-} from "@nextui-org/react";
+} from "@heroui/react";
 import PlusIcon from "@/app/components/icons/PlusIcon";
 import {createPost} from "@/utils/data/post";
 import {addMediaToPost} from "@/utils/data/media"

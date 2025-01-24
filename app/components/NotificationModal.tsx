@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from 'react';
-import {Modal, ModalContent, ModalHeader, ModalBody, Divider} from '@nextui-org/react';
+import {Modal, ModalContent, ModalHeader, ModalBody, Divider} from "@heroui/react";
 
 interface NotificationModalProps {
   isOpen: boolean;

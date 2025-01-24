@@ -1,5 +1,5 @@
 import {CommentByPost} from "@/utils/types/data";
-import {Avatar} from "@nextui-org/react";
+import {Avatar} from "@heroui/react";
 import Link from "next/link";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
 import {useState} from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import {Listbox, ListboxItem, Avatar, Tooltip} from "@nextui-org/react";
+import {Listbox, ListboxItem, Avatar, Tooltip} from "@heroui/react";
 import {signOut, useSession} from "next-auth/react";
 import {Key} from "react";
 import {useRouter} from "next/navigation";

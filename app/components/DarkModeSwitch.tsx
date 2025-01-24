@@ -1,7 +1,7 @@
 "use client";
 import {SunIcon} from "@/app/components/icons/SunIcon";
 import {MoonIcon} from "@/app/components/icons/MoonIcon";
-import {Switch} from "@nextui-org/switch";
+import {Switch} from "@heroui/switch";
 import {useEffect, useState} from "react";
 
 

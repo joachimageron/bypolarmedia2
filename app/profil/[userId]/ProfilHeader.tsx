@@ -1,6 +1,6 @@
 "use client";
 
-import {Avatar, Image} from "@nextui-org/react";
+import {Avatar, Image} from "@heroui/react";
 import EditProfilButton from "@/app/profil/[userId]/EditProfilButton";
 import {useSession} from "next-auth/react";
 import {useState} from "react";
