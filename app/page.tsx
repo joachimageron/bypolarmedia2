@@ -123,7 +123,7 @@ export default function Home() {
       
       {(loadedFollowingPosts.current && loadedNotFollowingPosts.current) &&
          <div className={"w-full flex flex-col items-center"}>
-           {followedPosts.length === 0 ? (
+           {(followedPosts.length === 0 && notFollowedPosts.length === 0) ? (
              <p className={"mt-3 text-default-500"}>No posts to show</p>
            ) : (
              <p className={"mt-3 text-default-500"}>No more posts to show</p>
