@@ -42,7 +42,6 @@ export default function ShowFollowButton({children, listType, userInfo}: Readonl
         setUsersInfos(users)
       }
       
-      console.log(usersInfos)
       setIsLoaded(true);
     }
   }

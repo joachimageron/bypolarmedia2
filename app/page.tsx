@@ -23,7 +23,6 @@ export default function Home() {
     isLoading.current = true;
     
     const newFollowingPosts = await getFollowedPosts(skipFollowed.current, take);
-    console.log('newFollowingPosts', newFollowingPosts);
     
     if (newFollowingPosts === null) return;
     

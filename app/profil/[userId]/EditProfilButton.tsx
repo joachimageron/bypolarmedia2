@@ -117,7 +117,6 @@ export default function EditProfilButton({
   
   const handleRemoveImage = (e: FormEvent) => {
     e.preventDefault();
-    console.log("remove image");
     setSelectedProfileUrl(null);
     selectedBackgroundImage.current = "dell";
     setBackgroundUrl(undefined);

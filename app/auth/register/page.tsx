@@ -29,8 +29,7 @@ export default function Page() {
       const data = {name: name, email: email, password: password};
       const user = await createUser(data);
       if (user) {
-        console.log("User created successfully");
-        console.log(user);
+
         await signIn("credentials", {email: data.email, password: data.password});
       }
     }

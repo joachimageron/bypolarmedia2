@@ -205,8 +205,6 @@ export async function getNotFollowedPosts(skip: number = 0, take: number = 10) {
     select: {followingId: true},
   });
   
-  console.log('followingIds', followingIds);
-  
   if (followingIds.length === 0) {
     return prisma.post.findMany({
       skip,

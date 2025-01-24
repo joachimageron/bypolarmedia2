@@ -43,7 +43,6 @@ export default function CreatePostButton() {
       content,
     })
     if (!postCreated) {
-      console.error("Error creating post");
       setIsPosting(false);
       notification.showNotification("error", "Post creation failed", "An error occurred while creating your post");
       return

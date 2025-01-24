@@ -20,7 +20,6 @@ export default async function Profil({params}: Readonly<ProfilePageProps>) {
   }
   const userInfo = await getUserById(userId)
   
-  console.log(userInfo)
   return (
     <main className={"m-auto max-w-xl mb-20"}>
       {userInfo && <ProfilHeader userInfo={userInfo}/>}
