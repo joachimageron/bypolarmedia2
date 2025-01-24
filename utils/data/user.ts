@@ -3,6 +3,7 @@ import {prisma} from "@/prisma/prisma";
 import {hash} from "node:crypto";
 import path from "path";
 import fs from "fs/promises";
+import {put} from "@vercel/blob";
 
 /**
  * ---------------------------
@@ -38,7 +39,6 @@ export async function verifyUserCredentials(email: FormDataEntryValue, password:
   email = String(email);
   password = String(password);
   password = hash('sha1', password);
-  console.log(email, password)
   return prisma.user.findFirst({
     where: {
       email,
@@ -122,48 +122,78 @@ export async function updateUser(
   data: Partial<{
     name?: string;
     description?: string;
-    image?: string;
-    bgImage?: string;
+    image?: string;    // base64 ou rien
+    bgImage?: string | null;  // base64 ou "dell"
   }>
 ) {
-  
   try {
+    const isProd = process.env.NODE_ENV === "production";
     
-    console.log(data);
-    
+    // 1) Gestion de l'image "profile"
     if (data.image) {
-      const buffer = Buffer.from(data.image.replace(/^data:image\/\w+;base64,/, ""), "base64");
-      
-      // Détermine l'extension du fichier
-      const ext = /^data:(image\/\w+);base64,/.exec(data.image)?.[1].split('/')[1] ?? 'png';
-      
-      // Génère un nom de fichier unique
+      const buffer = Buffer.from(
+        data.image.replace(/^data:image\/\w+;base64,/, ""),
+        "base64"
+      );
+      const ext =
+        /^data:(image\/\w+);base64,/.exec(data.image)?.[1].split("/")[1] ?? "png";
       const uniqueFileName = `${userId}_${Date.now()}.${ext}`;
       
-      // Définit le chemin de sauvegarde
-      const uploadPath = path.join(process.cwd(), "public", "uploads", uniqueFileName);
-      
-      // Sauvegarde le fichier
-      await fs.writeFile(uploadPath, buffer);
-      
-      // Génère l'URL publique de l'image
-      data.image = `/uploads/users/${uniqueFileName}`;
+      if (isProd) {
+        // En PROD: upload via Vercel Blob
+        const result = await put(`users/${uniqueFileName}`, buffer, {
+          access: "public",
+        });
+        data.image = result.url; // URL renvoyée par Blob
+      } else {
+        // En DEV: stockage local
+        const uploadPath = path.join(
+          process.cwd(),
+          "public",
+          "uploads",
+          "users",
+          uniqueFileName
+        );
+        await fs.writeFile(uploadPath, buffer);
+        data.image = `/uploads/users/${uniqueFileName}`;
+      }
     }
     
-    if (data.bgImage === "dell") {data.bgImage = undefined;}
-    else if (typeof data.bgImage === 'string') {
-      const buffer = Buffer.from(data.bgImage.replace(/^data:image\/\w+;base64,/, ""), "base64");
-      
-      const ext = /^data:(image\/\w+);base64,/.exec(data.bgImage)?.[1].split('/')[1] ?? 'png';
-      
+    // 2) Gestion de l'image "bgImage"
+    if (data.bgImage === "dell") {
+      // "dell" => suppression
+      data.bgImage = null;
+    } else if (typeof data.bgImage === "string") {
+      const buffer = Buffer.from(
+        data.bgImage.replace(/^data:image\/\w+;base64,/, ""),
+        "base64"
+      );
+      const ext =
+        /^data:(image\/\w+);base64,/.exec(data.bgImage)?.[1].split("/")[1] ??
+        "png";
       const uniqueFileName = `${userId}_${Date.now()}.${ext}`;
       
-      const uploadPath = path.join(process.cwd(), "public", "uploads", "users", uniqueFileName);
-      
-      await fs.writeFile(uploadPath, buffer);
-      
-      data.bgImage = `/uploads/users/${uniqueFileName}`;
+      if (isProd) {
+        // En PROD: upload via Vercel Blob
+        const result = await put(`users/${uniqueFileName}`, buffer, {
+          access: "public",
+        });
+        data.bgImage = result.url;
+      } else {
+        // En DEV: stockage local
+        const uploadPath = path.join(
+          process.cwd(),
+          "public",
+          "uploads",
+          "users",
+          uniqueFileName
+        );
+        await fs.writeFile(uploadPath, buffer);
+        data.bgImage = `/uploads/users/${uniqueFileName}`;
+      }
     }
+    
+    // 3) Mise à jour en base
     return await prisma.user.update({
       where: {id: userId},
       data,
@@ -173,4 +203,3 @@ export async function updateUser(
     return null;
   }
 }
-
