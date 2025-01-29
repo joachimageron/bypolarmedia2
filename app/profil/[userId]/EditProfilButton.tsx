@@ -53,7 +53,7 @@ export default function EditProfilButton() {
     }
     setIsUpdating(true);
     
-    const res = await updateUser(session?.user.userId, data);
+    const res = await updateUser(data);
     
     if (res) {
       setUser(prevUser => ({
