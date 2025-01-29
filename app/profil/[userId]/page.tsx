@@ -32,7 +32,7 @@
     }, [userId, user]);
   
     return (
-      <main className={"m-auto max-w-xl mb-20"}>
+      <main className={"m-auto max-w-xl mb-20 overflow-y-scroll"}>
         {userInfo && <ProfilHeader userInfo={userInfo}/>}
         <Divider className={"my-2"}/>
         <h2 className={"text-center font-bold"}>Posts</h2>
