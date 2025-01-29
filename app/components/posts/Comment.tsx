@@ -6,17 +6,19 @@ import {useState} from "react";
 import {toggleLikeComment} from "@/utils/data/like";
 import {toggleDislikeComment} from "@/utils/data/dislike";
 import ThumbUpIcon from "@/app/components/icons/ThumbUpIcon";
+import {useUser} from "@/app/components/providers/UserProvider";
 
 
 export default function Comment({comment}: Readonly<{ comment: CommentByPost }>) {
-  const [isLiked, setIsLiked] = useState(!!comment.likes.find(like => like.userId === comment.author.id));
+  const {user} = useUser();
+  const [isLiked, setIsLiked] = useState(!!comment.likes.find(like => like.userId === user!.id));
   const [likeCount, setLikeCount] = useState(comment.likes.length);
   
-  const [isDisliked, setIsDisliked] = useState(!!comment.dislikes.find(dislike => dislike.userId === comment.author.id));
+  const [isDisliked, setIsDisliked] = useState(!!comment.dislikes.find(dislike => dislike.userId === user!.id));
   const [dislikeCount, setDislikeCount] = useState(comment.dislikes.length);
   
   const handleLike = async () => {
-    const liked = await toggleLikeComment(comment.author.id, comment.id)
+    const liked = await toggleLikeComment(comment.id)
     setIsLiked(!!liked)
     if (liked) setLikeCount(likeCount + 1)
     else setLikeCount(likeCount - 1)
@@ -24,7 +26,7 @@ export default function Comment({comment}: Readonly<{ comment: CommentByPost }>)
   
   const handleDislike = async () => {
     setIsDisliked(!isDisliked)
-    const disliked = await toggleDislikeComment(comment.author.id, comment.id)
+    const disliked = await toggleDislikeComment(comment.id)
     if (disliked) setDislikeCount(dislikeCount + 1)
     else setDislikeCount(dislikeCount - 1)
   }
@@ -51,7 +53,6 @@ export default function Comment({comment}: Readonly<{ comment: CommentByPost }>)
               <p className="font-semibold text-small">{likeCount}</p>
               <button onClick={() => handleLike()}>
                 <ThumbUpIcon className={isLiked ? "w-4 fill-primary" : "w-4 fill-default-500"}/>
-              
               </button>
             </div>
             <div className="flex gap-2 content-center">

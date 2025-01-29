@@ -56,7 +56,7 @@ export async function toggleDislikeComment(
   });
   if (dislike) {
     await prisma.dislike.delete({
-      where: {id: dislike.commentId ?? undefined},
+      where: {id: dislike.id},
     });
     return false;
   } else {
