@@ -15,9 +15,9 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
   const {data: session} = useSession();
   
   return (
-    <section className={"mt-5"}>
+    <section className={"sm:mt-5"}>
       {!userInfo?.bgImage && <div className={"pt-24"}/>}
-      <Image isBlurred src={userInfo?.bgImage ?? undefined} alt={"background image of the user"} className={"-z-10"}/>
+      <Image isBlurred src={userInfo?.bgImage ?? undefined} alt={"background image of the user"} className={"-z-10 rounded-none sm:rounded-large"}/>
       <div className={"p-5"}>
         <div className={"flex justify-between items-end -mt-14"}>
           <Avatar showFallback className={"w-28 h-28"} src={userInfo?.image ?? undefined}/>
