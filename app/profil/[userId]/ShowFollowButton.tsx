@@ -81,7 +81,7 @@ export default function ShowFollowButton({children, listType, userInfo}: Readonl
                     </div>
                   </Link>
                   {data && data.user.userId !== user.id && (
-                    <FollowButton authorId={userInfo.id}/>
+                    <FollowButton authorId={userInfo.id} size={'sm'}/>
                   )
                   }
                 </div>
