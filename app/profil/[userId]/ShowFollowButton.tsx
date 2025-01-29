@@ -26,8 +26,6 @@ export default function ShowFollowButton({children, listType, userInfo}: Readonl
   const [isLoaded, setIsLoaded] = useState(false);
   const [usersInfos, setUsersInfos] = useState<UserById[]>([]);
   
-  console.log(userInfo)
-  
   const loadFollowers = async () => {
     if (isOpen) {
       if (isLoaded) return;

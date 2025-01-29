@@ -3,7 +3,7 @@ import {
   Avatar,
   Button,
   Form,
-  Image,
+  Image, Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -19,7 +19,6 @@ import {useNotificationModal} from "@/app/components/providers/NotificationProvi
 import UploadButton from "@/app/components/UploadButton";
 import {Icon} from "@iconify/react";
 import {useUser} from "@/app/components/providers/UserProvider";
-
 
 
 export default function EditProfilButton() {
@@ -38,15 +37,16 @@ export default function EditProfilButton() {
   const notification = useNotificationModal();
   
   
-  
   const handleUpdate = async (e: FormEvent) => {
     e.preventDefault();
     if (!session?.user.userId) return;
     // Update profil
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const name = formData.get("name");
     const description = formData.get("description");
     
     const data = {
+      name: name ? String(name) : undefined,
       description: description ? String(description) : undefined,
       image: selectedProfileImage.current,
       bgImage: selectedBackgroundImage.current,
@@ -107,7 +107,7 @@ export default function EditProfilButton() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">Edit profil</ModalHeader>
-              <Form onSubmit={handleUpdate}>
+              <Form onSubmit={handleUpdate} validationBehavior={"native"}>
                 <ModalBody className={"w-full"}>
                   {!backgroundUrl && (
                     <UploadButton
@@ -145,6 +145,13 @@ export default function EditProfilButton() {
                             className={'z-20 rounded-full shadow p-2 bg-default-100 mx-auto '}/>
                     </UploadButton>
                   </div>
+                  <Input
+                    name={"name"}
+                    variant="bordered"
+                    label={"Name"}
+                    defaultValue={user?.name ?? undefined}
+                    required
+                    className={"w-full mt-3"}/>
                   <Textarea
                     name={"description"}
                     variant="bordered"

@@ -32,7 +32,6 @@ export async function toggleFollowUser(followingId: string) {
     });
     return 'deleted'
   } else {
-    console.log('create follow')
     return await prisma.follower.create({
       data: {
         followerId: session.user.userId,
