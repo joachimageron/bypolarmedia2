@@ -22,8 +22,6 @@ export default function UserAvatarMenu() {
     }
   }
   
-  console.log(user);
-  
   return (
     <Tooltip
       content={
