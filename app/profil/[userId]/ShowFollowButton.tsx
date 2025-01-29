@@ -33,13 +33,11 @@ export default function ShowFollowButton({children, listType, userInfo}: Readonl
       if (isLoaded) return;
       
       if (listType === 'followers') {
-        const followerIds = userInfo.followers.map(follower => follower.followingId)
+        const followerIds = userInfo.following.map(follower => follower.followerId)
         const users = await getUsersByIds(followerIds)
         setUsersInfos(users)
-      }
-      
-      else if (listType === 'following') {
-        const followingIds = userInfo.following.map(following => following.followerId)
+      } else if (listType === 'following') {
+        const followingIds = userInfo.followers.map(following => following.followingId)
         const users = await getUsersByIds(followingIds)
         setUsersInfos(users)
       }
@@ -62,6 +60,16 @@ export default function ShowFollowButton({children, listType, userInfo}: Readonl
           </ModalHeader>
           
           <ModalBody className={"max-h-[80vh]"}>
+            
+            {usersInfos.length === 0 && isLoaded && (
+              <>
+                <Divider/>
+                <div className="flex justify-center items-center p-3">
+                  <p className="text-default-500">No {listType} yet</p>
+                </div>
+              </>
+            )}
+            
             {usersInfos.map(user => (
               <div key={generateRandomKey()}>
                 <Divider/>
@@ -84,7 +92,7 @@ export default function ShowFollowButton({children, listType, userInfo}: Readonl
               <Spinner/>
             )}
           </ModalBody>
-          
+        
         </ModalContent>
       </Modal>
     </>
