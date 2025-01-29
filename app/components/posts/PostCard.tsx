@@ -9,7 +9,7 @@ import {
   Image,
   
 } from "@heroui/react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {PostExtended} from "@/utils/types/data";
 import ThumbDownIcon from "@/app/components/icons/ThumbDownIcon";
 import {toggleDislikePost} from "@/utils/data/dislike";
@@ -19,14 +19,16 @@ import FollowButton from "@/app/components/users/FollowButton";
 import {useSession} from "next-auth/react";
 import Link from "next/link";
 import ThumbUpIcon from "@/app/components/icons/ThumbUpIcon";
+import {useUser} from "@/app/components/providers/UserProvider";
 
 export default function PostCard({post, displayFollow}: Readonly<{ post: PostExtended, displayFollow: boolean }>) {
   const {data} = useSession()
+  const {user} = useUser()
   
-  const [isLiked, setIsLiked] = useState(!!post.likes.find(like => like.userId === post.author.id));
+  const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likes.length);
   
-  const [isDisliked, setIsDisliked] = useState(!!post.dislikes.find(dislike => dislike.userId === post.author.id))
+  const [isDisliked, setIsDisliked] = useState(!!post.dislikes.find(dislike => dislike.userId === user?.id));
   const [dislikeCount, setDislikeCount] = useState(post.dislikes.length);
   
   const [commentOpen, setCommentOpen] = useState(false)
@@ -34,18 +36,23 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
   const [errorLoadingImage, setErrorLoadingImage] = useState(false)
   
   const handleLike = async () => {
-    const liked = await toggleLikePost(post.author.id, post.id)
+    const liked = await toggleLikePost(post.id)
     setIsLiked(!!liked)
     if (liked) setLikeCount(likeCount + 1)
     else setLikeCount(likeCount - 1)
   }
   
   const handleDislike = async () => {
-    const disliked = await toggleDislikePost(post.author.id, post.id)
+    const disliked = await toggleDislikePost(post.id)
     setIsDisliked(!!disliked)
     if (disliked) setDislikeCount(dislikeCount + 1)
     else setDislikeCount(dislikeCount - 1)
   }
+  
+  useEffect(() => {
+    setIsLiked(!!post.likes.find(like => like.userId === user?.id))
+    setIsDisliked(!!post.dislikes.find(dislike => dislike.userId === user?.id))
+  }, [post.likes, post.dislikes, user])
   
   return (
     <Card className="my-5">

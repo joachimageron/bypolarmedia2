@@ -1,6 +1,6 @@
 'use server';
 import {prisma} from "@/prisma/prisma";
-import {Dislike} from "@prisma/client";
+import {serverSession} from "@/utils/auth";
 
 
 /**
@@ -11,16 +11,16 @@ import {Dislike} from "@prisma/client";
 
 /**
  * Dislike ou ne plus dislike une publication
- * @param userId
  * @param postId
  */
 export async function toggleDislikePost(
-  userId: string,
   postId: string
 ) {
+  const session = await serverSession();
+  if (!session) return null;
   const dislike = await prisma.dislike.findFirst({
     where: {
-      userId,
+      userId: session.user.userId,
       postId,
     },
   });
@@ -32,7 +32,7 @@ export async function toggleDislikePost(
   } else {
     return prisma.dislike.create({
       data: {
-        userId,
+        userId: session.user.userId,
         postId,
       },
     });
@@ -41,16 +41,16 @@ export async function toggleDislikePost(
 
 /**
  * Dislike ou ne plus dislike un commentaire
- * @param userId
  * @param commentId
  */
 export async function toggleDislikeComment(
-  userId: string,
   commentId: string
 ) {
+  const session = await serverSession();
+  if (!session) return null;
   const dislike = await prisma.dislike.findFirst({
     where: {
-      userId,
+      userId: session.user.userId,
       commentId,
     },
   });
@@ -62,7 +62,7 @@ export async function toggleDislikeComment(
   } else {
     return prisma.dislike.create({
       data: {
-        userId,
+        userId: session.user.userId,
         commentId,
       },
     });

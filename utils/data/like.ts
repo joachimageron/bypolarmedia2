@@ -1,5 +1,6 @@
 'use server';
 import { prisma } from "@/prisma/prisma";
+import {serverSession} from "@/utils/auth";
 
 /**
  * ---------------------------
@@ -9,16 +10,16 @@ import { prisma } from "@/prisma/prisma";
 
 /**
  * Like or unlike a post
- * @param userId
  * @param postId
  */
 export async function toggleLikePost(
-  userId: string,
   postId: string
 ) {
+  const session = await serverSession();
+  if (!session) return null;
   const like = await prisma.like.findFirst({
     where: {
-      userId,
+      userId: session.user.userId,
       postId,
     },
     select: {
@@ -33,7 +34,7 @@ export async function toggleLikePost(
   } else {
     return prisma.like.create({
       data: {
-        userId,
+        userId: session.user.userId,
         postId,
       },
     });
@@ -42,16 +43,16 @@ export async function toggleLikePost(
 
 /**
  * Like or unlike a comment
- * @param userId
  * @param commentId
  */
 export async function toggleLikeComment(
-  userId: string,
   commentId: string
 ) {
+  const session = await serverSession();
+  if (!session) return null;
   const like = await prisma.like.findFirst({
     where: {
-      userId,
+      userId: session.user.userId,
       commentId,
     },
   });
@@ -63,7 +64,7 @@ export async function toggleLikeComment(
   } else {
     return prisma.like.create({
       data: {
-        userId,
+        userId: session.user.userId,
         commentId,
       },
     });
