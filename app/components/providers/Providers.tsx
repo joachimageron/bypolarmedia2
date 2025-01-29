@@ -11,9 +11,10 @@ import {UserProvider} from "@/app/components/providers/UserProvider";
 export default function Providers({children}: Readonly<{
   children: React.ReactNode;
 }>) {
-  
-  return (<>
-      <Analytics/>
+  const env = process.env.NODE_ENV;
+  return (
+    <>
+      {env === 'production' && <Analytics/>}
       <HeroUIProvider>
         <SessionProvider>
           <UserProvider>
