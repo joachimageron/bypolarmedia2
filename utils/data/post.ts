@@ -16,11 +16,15 @@ import {serverSession} from "@/utils/auth";
  */
 
 export async function createPost(data: {
-  authorId: string;
   content: string;
 }) {
+  const session = await serverSession();
+  if (!session) return null;
   return prisma.post.create({
-    data,
+    data:{
+      authorId: session.user.userId,
+      content: data.content,
+    },
   });
 }
 

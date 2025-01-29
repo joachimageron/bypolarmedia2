@@ -1,5 +1,6 @@
 'use server';
 import {prisma} from "@/prisma/prisma";
+import {serverSession} from "@/utils/auth";
 
 
 /**
@@ -11,16 +12,21 @@ import {prisma} from "@/prisma/prisma";
 
 /**
  * Ajouter un commentaire à une publication
- * @param data{postId, authorId, content}
+ * @param postId
+ * @param content
  */
-export async function addComment(data: {
-  postId: string;
-  authorId: string;
-  content: string;
-}) {
-  if (!data.content || !data.postId || !data.authorId) return false;
+export async function addComment(
+  postId: string,
+  content: string
+) {
+  const session = await serverSession();
+  if (!session) return null
   return prisma.comment.create({
-    data,
+    data: {
+      content,
+      authorId: session.user.userId,
+      postId,
+    },
     include: {
       author: true,
       likes: true,

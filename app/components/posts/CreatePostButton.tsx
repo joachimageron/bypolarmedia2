@@ -39,7 +39,6 @@ export default function CreatePostButton() {
     setIsPosting(true);
     if (!session) return;
     const postCreated = await createPost({
-      authorId: session.user.userId,
       content,
     })
     if (!postCreated) {

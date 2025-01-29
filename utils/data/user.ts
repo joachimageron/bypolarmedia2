@@ -141,11 +141,9 @@ export async function getUserByEmail(email: string) {
 
 /**
  * Mettre à jour les informations d'un utilisateur
- * @param userId
  * @param data{name, description, image, bgImage}
  */
 export async function updateUser(
-  userId: string,
   data: Partial<{
     name?: string;
     description?: string;
@@ -153,6 +151,9 @@ export async function updateUser(
     bgImage?: string | null;  // base64 ou "dell"
   }>
 ) {
+  const session = await serverSession();
+  const userId = session?.user.userId;
+  if (!session) return null;
   try {
     const isProd = process.env.NODE_ENV === "production";
     

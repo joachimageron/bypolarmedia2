@@ -5,13 +5,11 @@ import {CommentsByPost, PostExtended} from "@/utils/types/data";
 import {addComment, getCommentsByPost} from "@/utils/data/comment";
 import {FormEvent, useEffect, useState} from "react";
 import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
-import {useSession} from "next-auth/react";
 import Comment from "@/app/components/posts/Comment";
 
 export default function CommentSection({post}: Readonly<{
   post: PostExtended,
 }>) {
-  const {data} = useSession();
   const notification = useNotificationModal();
   const [commentContent, setCommentContent] = useState("");
   const [commentLoading, setCommentLoading] = useState(false);
@@ -29,11 +27,7 @@ export default function CommentSection({post}: Readonly<{
   const handleComment = async (e: FormEvent) => {
     e.preventDefault();
     setCommentLoading(true);
-    const commented = await addComment({
-      postId: post.id,
-      authorId: data?.user.userId ?? "",
-      content: commentContent,
-    });
+    const commented = await addComment(post.id, commentContent);
     if (!commented) {
       notification.showNotification("error", "Error", "Error adding comment")
     } else {
