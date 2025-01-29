@@ -54,6 +54,7 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
     setIsDisliked(!!post.dislikes.find(dislike => dislike.userId === user?.id))
   }, [post.likes, post.dislikes, user])
   
+  console.log(user)
   return (
     <Card className="my-5">
       <CardHeader className="justify-between">
@@ -63,10 +64,11 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
             <h4 className="text-small font-semibold leading-none text-default-600">{post.author.name}</h4>
           </div>
         </Link>
-        {data && data.user.userId !== post.author.id && displayFollow && (
+        {data?.user.userId !== post.author.id && displayFollow && (
           <FollowButton
-            followed={post.author.following.filter(f => f.followerId === data.user.userId).length > 0}
-            followingId={post.author.id}/>
+            authorId={post.author.id}
+            size="sm"
+          />
         )
         }
       

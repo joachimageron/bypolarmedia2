@@ -3,7 +3,7 @@
 import {Avatar, Image} from "@heroui/react";
 import EditProfilButton from "@/app/profil/[userId]/EditProfilButton";
 import {useSession} from "next-auth/react";
-import ProfilHeaderFollowButton from "@/app/profil/[userId]/FollowButton";
+import ProfilHeaderFollowButton from "@/app/components/users/FollowButton";
 import ShowFollowButton from "@/app/profil/[userId]/ShowFollowButton";
 import {GetUserByIdReturnType} from "@/utils/data/user";
 
@@ -25,11 +25,9 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
           {session?.user.userId === userInfo?.id &&
              <EditProfilButton/>
           }
-          {session && session?.user.userId !== userInfo?.id && userInfo &&
+          {session?.user.userId !== userInfo?.id && userInfo &&
              <ProfilHeaderFollowButton
-                followed={userInfo.following.length > 0}
-                followerId={session.user.userId}
-                followingId={userInfo.id}
+                authorId={userInfo.id}
              />
           }
         </div>
@@ -40,13 +38,13 @@ export default function ProfilHeader({userInfo}: Readonly<ProfilHeaderProps>) {
              <>
                 <ShowFollowButton listType={"followers"} userInfo={userInfo}>
                    <div className={"flex gap-2"}>
-                      <p className={"font-bold"}>{userInfo?.followers.length}</p>
+                      <p className={"font-bold"}>{userInfo?.following.length}</p>
                       <p>followers</p>
                    </div>
                 </ShowFollowButton>
                 <ShowFollowButton listType={"following"} userInfo={userInfo}>
                    <div className={"flex gap-2"}>
-                      <p className={"font-bold"}>{userInfo?.following.length}</p>
+                      <p className={"font-bold"}>{userInfo?.followers.length}</p>
                       <p>following</p>
                    </div>
                 </ShowFollowButton>

@@ -1,29 +1,40 @@
 import {Button} from "@heroui/react";
-import {useState} from "react";
+import { useMemo} from "react";
 import {toggleFollowUser} from "@/utils/data/follower";
-import {useSession} from "next-auth/react";
+import {useUser} from "@/app/components/providers/UserProvider";
 
 type FollowButtonProps = {
-  followed: boolean,
-  followingId: string
+  authorId: string,
+  size?: "sm" | "md" | "lg",
+  
 }
 
-export default function FollowButton({followed , followingId}: Readonly<FollowButtonProps>) {
-  const [isFollowed, setIsFollowed] = useState(followed);
-  const {data} = useSession()
+export default function FollowButton({authorId, size}: Readonly<FollowButtonProps>) {
+  const {user, setUser} = useUser();
+  const isFollowed = useMemo(()=>(!!user?.followers.find(follow => follow.followingId === authorId)),[authorId, user?.followers]);
   
   const handleFollow = async () => {
-    if (!data) return
-    const followed = await toggleFollowUser(data.user.userId, followingId)
-    setIsFollowed(followed)
+    const followed = await toggleFollowUser(authorId)
+    console.log('followed',followed)
+    if (!followed) return
+    if (followed === 'deleted') {
+      setUser(prevUser => ({
+        ...prevUser!,
+        followers: prevUser!.followers.filter(follow => follow.followingId !== authorId)
+      }))
+    } else {
+      setUser(prevUser => ({
+        ...prevUser!,
+        followers: [...prevUser!.followers, followed]
+    }))
   }
+}
   
   return (
     <Button
-      className={isFollowed ? "bg-transparent text-foreground border-default-200" : ""}
-      color="primary"
-      radius="full"
-      size="sm"
+      className={size === "sm" ? "rounded-full" : ""}
+      color={isFollowed ? "default" : "primary"}
+      size={size}
       variant={isFollowed ? "bordered" : "solid"}
       onPress={() => handleFollow()}
     >

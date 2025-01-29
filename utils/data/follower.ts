@@ -1,5 +1,6 @@
 'use server';
 import {prisma} from "@/prisma/prisma";
+import {serverSession} from "@/utils/auth";
 
 
 /**
@@ -10,34 +11,34 @@ import {prisma} from "@/prisma/prisma";
 
 /**
  * Suivre ou ne plus suivre un utilisateur
- * @param followerId
  * @param followingId
  */
 
-export async function toggleFollowUser(
-  followerId: string,
-  followingId: string
-) {
+export async function toggleFollowUser(followingId: string) {
+  const session = await serverSession()
+  if (!session) return null
+  
   const follow = await prisma.follower.findFirst({
     where: {
-      followerId,
+      followerId: session.user.userId,
       followingId,
     },
   });
+  
   
   if (follow) {
     await prisma.follower.delete({
       where: {id: follow.id},
     });
-    return false;
+    return 'deleted'
   } else {
-    await prisma.follower.create({
+    console.log('create follow')
+    return await prisma.follower.create({
       data: {
-        followerId,
+        followerId: session.user.userId,
         followingId,
       },
     });
-    return true;
   }
 }
 
