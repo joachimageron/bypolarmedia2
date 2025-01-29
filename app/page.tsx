@@ -42,17 +42,16 @@ export default function Home() {
     isLoading.current = true;
     
     const newUnfollowedPosts = await getNotFollowedPosts(skipUnFollowed.current, take);
-    
+
     if (newUnfollowedPosts === null) return;
     
-    if (newUnfollowedPosts.length > 0) {
-      setNotFollowedPosts((prev) => [...prev, ...newUnfollowedPosts]);
-      skipUnFollowed.current += newUnfollowedPosts.length;
-    }
+    isLoading.current = false;
     
     if (newUnfollowedPosts.length < 10) loadedNotFollowingPosts.current = true;
     
-    isLoading.current = false;
+    setNotFollowedPosts((prev) => [...prev, ...newUnfollowedPosts]);
+    skipUnFollowed.current += newUnfollowedPosts.length;
+    
   }
   
   useEffect(() => {
@@ -101,39 +100,39 @@ export default function Home() {
           ))}
         </ul>
         {followedPosts.length > 0 &&
-          <div>
-           <Divider className={'mt-12'}/>
-            <p className={"text-center my-5"}>Discover
-            </p>
-            <Divider className={'mb-12'}/>
-          </div>
+           <div>
+              <Divider className={'mt-12'}/>
+              <p className={"text-center my-5"}>Discover
+              </p>
+              <Divider className={'mb-12'}/>
+           </div>
         }
-      <ul>
-        {notFollowedPosts?.map(post => (
-          <PostCard key={post.id + generateRandomKey()} post={post} displayFollow={true}/>
-        ))}
-      </ul>
-      
-      {isLoading.current &&
-         <div className={"w-full flex flex-col items-center"}>
-            <Spinner className={"mt-3"}/>
-         </div>
-      }
-      
-      {(loadedFollowingPosts.current && loadedNotFollowingPosts.current) &&
-         <div className={"w-full flex flex-col items-center"}>
-           {(followedPosts.length === 0 && notFollowedPosts.length === 0) ? (
-             <p className={"mt-3 text-default-500"}>No posts to show</p>
-           ) : (
-             <p className={"mt-3 text-default-500"}>No more posts to show</p>
-           )
-           }
+        <ul>
+          {notFollowedPosts?.map(post => (
+            <PostCard key={post.id + generateRandomKey()} post={post} displayFollow={true}/>
+          ))}
+        </ul>
+        
+        {isLoading.current &&
+           <div className={"w-full flex flex-col items-center"}>
+              <Spinner className={"mt-3"}/>
+           </div>
+        }
+        
+        {(loadedFollowingPosts.current && loadedNotFollowingPosts.current) &&
+           <div className={"w-full flex flex-col items-center"}>
+             {(followedPosts.length === 0 && notFollowedPosts.length === 0) ? (
+               <p className={"mt-3 text-default-500"}>No posts to show</p>
+             ) : (
+               <p className={"mt-3 text-default-500"}>No more posts to show</p>
+             )
+             }
 
-         </div>
-      }
-    
-    </ul>
-</main>
-)
-  ;
+           </div>
+        }
+      
+      </ul>
+    </main>
+  )
+    ;
 }

@@ -54,7 +54,6 @@ export default function PostCard({post, displayFollow}: Readonly<{ post: PostExt
     setIsDisliked(!!post.dislikes.find(dislike => dislike.userId === user?.id))
   }, [post.likes, post.dislikes, user])
   
-  console.log(user)
   return (
     <Card className="my-5">
       <CardHeader className="justify-between">

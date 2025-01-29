@@ -15,7 +15,6 @@ export default function FollowButton({authorId, size}: Readonly<FollowButtonProp
   
   const handleFollow = async () => {
     const followed = await toggleFollowUser(authorId)
-    console.log('followed',followed)
     if (!followed) return
     if (followed === 'deleted') {
       setUser(prevUser => ({
