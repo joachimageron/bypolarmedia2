@@ -8,16 +8,18 @@ datasource db {
 }
 
 model User {
-  id             String          @id @default(cuid())
-  name           String?
-  email          String?         @unique
-  emailVerified  DateTime?
-  image          String?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  description    String?
-  bgImage        String?
-  password       String?
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  description   String?
+  bgImage       String?
+  password      String?
+  darkMode      Boolean   @default(false)
+
   accounts       Account[]
   authenticators Authenticator[]
   comments       Comment[]

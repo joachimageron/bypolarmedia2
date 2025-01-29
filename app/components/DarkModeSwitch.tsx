@@ -2,11 +2,15 @@
 import {SunIcon} from "@/app/components/icons/SunIcon";
 import {MoonIcon} from "@/app/components/icons/MoonIcon";
 import {Switch} from "@heroui/switch";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo} from "react";
+import {useUser} from "@/app/components/providers/UserProvider";
+import {toggleDarkMode} from "@/utils/data/user";
+
 
 
 export default function DarkModeSwitch() {
-  const [isSelected, setIsSelected] = useState(false)
+  const {user, setUser} = useUser();
+  const isSelected = useMemo(() => user?.darkMode ?? false, [user]);
   
   useEffect(() => {
     if (isSelected) {
@@ -16,9 +20,22 @@ export default function DarkModeSwitch() {
     }
   }, [isSelected])
   
+  const handleDarkMode = async () => {
+    const toggledUser = await toggleDarkMode();
+    if (toggledUser) {
+      setUser(prevUser => ({
+        ...prevUser,
+        ...toggledUser,
+        following: prevUser!.following,
+        followers: prevUser!.followers,
+      }));
+
+    }
+  }
+  
   return (
     <Switch
-      isSelected={isSelected} onValueChange={setIsSelected}
+      isSelected={isSelected} onValueChange={handleDarkMode}
       className={"flex items-center justify-center"}
       defaultSelected
       size="sm"

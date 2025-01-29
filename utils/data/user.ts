@@ -4,6 +4,7 @@ import {hash} from "node:crypto";
 import path from "path";
 import fs from "fs/promises";
 import {put} from "@vercel/blob";
+import {serverSession} from "@/utils/auth";
 
 /**
  * ---------------------------
@@ -228,4 +229,29 @@ export async function updateUser(
     console.error("Erreur lors du téléchargement de l'image:", error);
     return null;
   }
+}
+
+/**
+ * toggleDarkMode - Activer ou désactiver le mode sombre pour un utilisateur
+ * @returns Promise<null | User>
+ *       null si l'utilisateur n'est pas connecté
+ *       User si le mode sombre a été mis à jour
+  */
+export async function toggleDarkMode() {
+  const session = await serverSession();
+  if (!session) return null;
+  
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.userId },
+    select: { darkMode: true }
+  });
+  
+  if (!user) return null;
+  
+  return prisma.user.update({
+    where: { id: session.user.userId },
+    data: {
+      darkMode: !user.darkMode
+    }
+  });
 }

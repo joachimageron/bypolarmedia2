@@ -13,27 +13,20 @@
     const [userInfo, setUserInfo] = useState<GetUserByIdReturnType | null>(null);
     const {user} = useUser();
     const userId = use(params).userId as string;
-    console.log('userId', userId);
   
     useEffect(() => {
       if (!userId) {
         notFound();
-        return;
       }
   
       if (userId !== user?.id) {
-        console.log('not connected user', userId);
-  
         userExists(userId).then(userExist => {
           if (!userExist) {
             notFound();
-            return;
           }
-  
           getUserById(userId).then(u => setUserInfo(u));
         });
       } else {
-        console.log('connected user', user);
         setUserInfo(user);
       }
     }, [userId, user]);
