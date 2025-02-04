@@ -1,6 +1,6 @@
 'use server';
 import {prisma} from "@/prisma/prisma";
-import {hash} from "crypto";
+import bcrypt from 'bcryptjs';
 import path from "path";
 import fs from "fs/promises";
 import {put} from "@vercel/blob";
@@ -24,7 +24,7 @@ export async function createUser(data: {
   const strData = {
     email: String(data.email),
     name: String(data.name),
-    password: hash('sha1', String(data.password)),
+    password: bcrypt.hashSync(String(data.password), 10),
   };
   return prisma.user.create({
     data: strData,
@@ -37,15 +37,15 @@ export async function createUser(data: {
  * @param password
  */
 export async function verifyUserCredentials(email: FormDataEntryValue, password: FormDataEntryValue) {
-  email = String(email);
-  password = String(password);
-  password = hash('sha1', password);
-  return prisma.user.findFirst({
-    where: {
-      email,
-      password,
-    },
+  const user = await prisma.user.findFirst({
+    where: {email: String(email)},
   });
+  
+  if (user && bcrypt.compareSync(String(password), user.password)) {
+    return user;
+  } else {
+    return null;
+  }
 }
 
 
