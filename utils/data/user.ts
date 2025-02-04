@@ -1,6 +1,6 @@
 'use server';
 import {prisma} from "@/prisma/prisma";
-import {hash} from "node:crypto";
+import {hash} from "crypto";
 import path from "path";
 import fs from "fs/promises";
 import {put} from "@vercel/blob";
