@@ -41,7 +41,7 @@ export async function verifyUserCredentials(email: FormDataEntryValue, password:
     where: {email: String(email)},
   });
   
-  if (user && bcrypt.compareSync(String(password), user.password)) {
+  if (user?.password && bcrypt.compareSync(String(password), user.password)) {
     return user;
   } else {
     return null;
