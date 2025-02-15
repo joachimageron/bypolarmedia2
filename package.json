@@ -22,7 +22,7 @@
     "next-auth": "^4.24.10",
     "prisma": "6.1.0",
     "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106"
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
