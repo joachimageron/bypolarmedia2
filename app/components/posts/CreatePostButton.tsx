@@ -8,14 +8,14 @@ import {
   Button,
   useDisclosure,
   Textarea,
-  Image
+  Image,
+  addToast
 } from "@heroui/react";
 import PlusIcon from "@/app/components/icons/PlusIcon";
 import {createPost} from "@/utils/data/post";
 import {addMediaToPost} from "@/utils/data/media"
 import {useRef, useState} from "react";
 import {useSession} from "next-auth/react";
-import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
 import UploadButton from "@/app/components/UploadButton";
 import {Icon} from "@iconify/react";
 
@@ -28,12 +28,15 @@ export default function CreatePostButton() {
   
   const selectedImage = useRef<string | undefined>()
   
-  const notification = useNotificationModal();
   
   const handlePost = async () => {
     // Post
     if (content === "" && selectedImageUrl === "") {
-      notification.showNotification("error", "Invalid post", "Please fill one of the fields");
+      addToast({
+        title: "Invalid post",
+        description: "Please fill one of the fields",
+        color: "danger",
+      })
       return;
     }
     setIsPosting(true);
@@ -43,7 +46,11 @@ export default function CreatePostButton() {
     })
     if (!postCreated) {
       setIsPosting(false);
-      notification.showNotification("error", "Post creation failed", "An error occurred while creating your post");
+      addToast({
+        title: "Error",
+        description: "An error occurred while creating the post",
+        color: "danger",
+      })
       return
     }
     
@@ -59,8 +66,12 @@ export default function CreatePostButton() {
     }
     onOpenChange()
     setIsPosting(false);
-    notification.showNotification("success", "Post created", "Your post will appear on the feed soon");
-    
+    addToast({
+      title: "Post created",
+      description: "Your post will appear on the feed soon",
+      color: "success",
+      variant: "solid",
+    })
   }
   
   const handleSelectImage = (file: File) => {

@@ -10,7 +10,7 @@ import {toggleDarkMode} from "@/utils/data/user";
 
 export default function DarkModeSwitch() {
   const {user, setUser} = useUser();
-  const isSelected = useMemo(() => user?.darkMode ?? false, [user]);
+  const isSelected = useMemo(() => user?.darkMode ?? true, [user]);
   
   useEffect(() => {
     if (isSelected) {

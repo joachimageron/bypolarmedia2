@@ -1,5 +1,6 @@
 "use client";
 import {
+  addToast,
   Avatar,
   Button,
   Form,
@@ -15,7 +16,6 @@ import {
 import {updateUser} from "@/utils/data/user";
 import {FormEvent, useRef, useState} from "react";
 import {useSession} from "next-auth/react";
-import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
 import UploadButton from "@/app/components/UploadButton";
 import {Icon} from "@iconify/react";
 import {useUser} from "@/app/components/providers/UserProvider";
@@ -32,10 +32,7 @@ export default function EditProfilButton() {
   const [isUpdating, setIsUpdating] = useState(false);
   
   const selectedProfileImage = useRef<string | undefined>();
-  const selectedBackgroundImage = useRef<string | undefined>();
-  
-  const notification = useNotificationModal();
-  
+  const selectedBackgroundImage = useRef<string | undefined>();  
   
   const handleUpdate = async (e: FormEvent) => {
     e.preventDefault();
@@ -64,10 +61,18 @@ export default function EditProfilButton() {
       }));
       onOpenChange()
       setIsUpdating(false);
-      notification.showNotification("success", "Profil updated", "Your profil has been updated successfully");
+      addToast({
+        title: "Success",
+        description: "Your profil has been updated successfully",
+        color: "success",
+      })
     } else {
       setIsUpdating(false);
-      notification.showNotification("error", "Error", "An error occured while updating your profil");
+      addToast({
+        title: "Error",
+        description: "An error occured while updating your profil",
+        color: "danger",
+      })
     }
   }
   

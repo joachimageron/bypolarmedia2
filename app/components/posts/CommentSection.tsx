@@ -1,16 +1,14 @@
 import {
-Input, Button, Form, Spinner,
+Input, Button, Form, Spinner, addToast
 } from "@heroui/react";
 import {CommentsByPost, PostExtended} from "@/utils/types/data";
 import {addComment, getCommentsByPost} from "@/utils/data/comment";
 import {FormEvent, useEffect, useState} from "react";
-import {useNotificationModal} from "@/app/components/providers/NotificationProvider";
 import Comment from "@/app/components/posts/Comment";
 
 export default function CommentSection({post}: Readonly<{
   post: PostExtended,
 }>) {
-  const notification = useNotificationModal();
   const [commentContent, setCommentContent] = useState("");
   const [commentLoading, setCommentLoading] = useState(false);
   const [comments, setComments] = useState<CommentsByPost | null>(null);
@@ -29,7 +27,11 @@ export default function CommentSection({post}: Readonly<{
     setCommentLoading(true);
     const commented = await addComment(post.id, commentContent);
     if (!commented) {
-      notification.showNotification("error", "Error", "Error adding comment")
+      addToast({
+        title: "Error",
+        description: "An error occurred while commenting",
+        color: "danger"
+      })
     } else {
       setCommentContent("")
       setComments([...(comments ?? []), commented])
