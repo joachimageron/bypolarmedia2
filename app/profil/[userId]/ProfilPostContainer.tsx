@@ -31,7 +31,7 @@ export default function ProfilPostContainer({userInfo}: Readonly<{ userInfo: Get
   useEffect(() => {
     // Chargement initial
     loadPosts();
-  }, []);
+  });
   
   useEffect(() => {
     let timeoutId: null | number = null;
@@ -57,7 +57,7 @@ export default function ProfilPostContainer({userInfo}: Readonly<{ userInfo: Get
       if (timeoutId) clearTimeout(timeoutId);
     };
     
-  }, [isLoading]);
+  });
   
   
   return (

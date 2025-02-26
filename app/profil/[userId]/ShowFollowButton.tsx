@@ -46,7 +46,7 @@ export default function ShowFollowButton({children, listType, userInfo}: Readonl
   
   useEffect(() => {
     loadFollowers();
-  }, [isOpen, listType, userInfo])
+  })
   
   return (
     <>
