@@ -70,7 +70,6 @@ export default function CreatePostButton() {
       title: "Post created",
       description: "Your post will appear on the feed soon",
       color: "success",
-      variant: "solid",
     })
   }
   
