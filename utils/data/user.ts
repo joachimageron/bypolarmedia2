@@ -1,10 +1,8 @@
 'use server';
-import {put} from "@vercel/blob";
 import {prisma} from "@/prisma/prisma";
 import bcrypt from 'bcryptjs';
-import path from "path";
-import fs from "fs/promises";
 import {serverSession} from "@/utils/auth";
+import uploadImage from "@/utils/uploadImage";
 
 /**
  * ---------------------------
@@ -147,55 +145,28 @@ export async function updateUser(
   data: Partial<{
     name?: string;
     description?: string;
-    image?: string;    // base64 ou rien
-    bgImage?: string | null;  // base64 ou "dell"
+    image?: string;    // data URL base64 ou rien
+    bgImage?: string | null;  // data URL base64 ou "dell"
   }>
 ) {
   const session = await serverSession();
   if (!session) return null;
   const userId = session.user.userId;
-  const isProd = true; // Remplacer par process.env.NODE_ENV si nécessaire
 
-  // Fonction interne pour traiter le chargement d'image
-  async function processImage(imageData: string): Promise<string> {
-    const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
-    const buffer = Buffer.from(base64Data, "base64");
-    const ext =
-      (/^data:(image\/\w+);base64,/.exec(imageData)?.[1].split("/")[1]) ?? "png";
-    const uniqueFileName = `${userId}_${Date.now()}.${ext}`;
-
-    if (isProd) {
-      // En production : upload via Vercel Blob
-      const result = await put(`users/${uniqueFileName}`, buffer, {
-        access: "public",
-        multipart: true,
-      });
-      return result.url;
-    } else {
-      // En développement : stockage local
-      const uploadPath = path.join(
-        process.cwd(),
-        "public",
-        "uploads",
-        "users",
-        uniqueFileName
-      );
-      await fs.writeFile(uploadPath, buffer);
-      return `/uploads/users/${uniqueFileName}`;
-    }
-  }
-
+  const userFolder = process.env.USER_FOLDER || "users";
   try {
     // Traitement de l'image de profil
     if (data.image) {
-      data.image = await processImage(data.image);
+      data.image = await uploadImage(data.image, userFolder);
+      if (data.image === undefined) return null;
     }
 
     // Traitement de l'image de fond
     if (data.bgImage === "dell") {
       data.bgImage = null;
     } else if (typeof data.bgImage === "string") {
-      data.bgImage = await processImage(data.bgImage);
+      data.bgImage = await uploadImage(data.bgImage, userFolder);
+      if (data.bgImage === undefined) return null;
     }
 
     // Mise à jour de l'utilisateur en base
@@ -204,7 +175,7 @@ export async function updateUser(
       data,
     });
   } catch (error) {
-    console.error("Erreur lors du téléchargement de l'image:", error);
+    console.error("Erreur lors de l'upload de l'image:", error);
     return null;
   }
 }
