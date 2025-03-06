@@ -37,6 +37,7 @@ export default function EditProfilButton() {
   const handleUpdate = async (e: FormEvent) => {
     e.preventDefault();
     if (!session?.user.userId) return;
+    setIsUpdating(true);
     // Update profil
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const name = formData.get("name");
@@ -48,9 +49,10 @@ export default function EditProfilButton() {
       image: selectedProfileImage.current,
       bgImage: selectedBackgroundImage.current,
     }
-    setIsUpdating(true);
     
     const res = await updateUser(data);
+
+    onOpenChange()
     
     if (res) {
       setUser(prevUser => ({

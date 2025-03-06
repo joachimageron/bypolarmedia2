@@ -1,9 +1,9 @@
 'use server';
+import {put} from "@vercel/blob";
 import {prisma} from "@/prisma/prisma";
 import bcrypt from 'bcryptjs';
 import path from "path";
 import fs from "fs/promises";
-import {put} from "@vercel/blob";
 import {serverSession} from "@/utils/auth";
 
 /**
@@ -152,78 +152,55 @@ export async function updateUser(
   }>
 ) {
   const session = await serverSession();
-  const userId = session?.user.userId;
   if (!session) return null;
-  try {
-    const isProd = process.env.NODE_ENV === "production";
-    
-    // 1) Gestion de l'image "profile"
-    if (data.image) {
-      const buffer = Buffer.from(
-        data.image.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
+  const userId = session.user.userId;
+  const isProd = true; // Remplacer par process.env.NODE_ENV si nécessaire
+
+  // Fonction interne pour traiter le chargement d'image
+  async function processImage(imageData: string): Promise<string> {
+    const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(base64Data, "base64");
+    const ext =
+      (/^data:(image\/\w+);base64,/.exec(imageData)?.[1].split("/")[1]) ?? "png";
+    const uniqueFileName = `${userId}_${Date.now()}.${ext}`;
+
+    if (isProd) {
+      // En production : upload via Vercel Blob
+      const result = await put(`users/${uniqueFileName}`, buffer, {
+        access: "public",
+        multipart: true,
+      });
+      return result.url;
+    } else {
+      // En développement : stockage local
+      const uploadPath = path.join(
+        process.cwd(),
+        "public",
+        "uploads",
+        "users",
+        uniqueFileName
       );
-      const ext =
-        /^data:(image\/\w+);base64,/.exec(data.image)?.[1].split("/")[1] ?? "png";
-      const uniqueFileName = `${userId}_${Date.now()}.${ext}`;
-      
-      if (isProd) {
-        // En PROD: upload via Vercel Blob
-        const result = await put(`users/${uniqueFileName}`, buffer, {
-          access: "public",
-        });
-        data.image = result.url; // URL renvoyée par Blob
-      } else {
-        // En DEV: stockage local
-        const uploadPath = path.join(
-          process.cwd(),
-          "public",
-          "uploads",
-          "users",
-          uniqueFileName
-        );
-        await fs.writeFile(uploadPath, buffer);
-        data.image = `/uploads/users/${uniqueFileName}`;
-      }
+      await fs.writeFile(uploadPath, buffer);
+      return `/uploads/users/${uniqueFileName}`;
     }
-    
-    // 2) Gestion de l'image "bgImage"
+  }
+
+  try {
+    // Traitement de l'image de profil
+    if (data.image) {
+      data.image = await processImage(data.image);
+    }
+
+    // Traitement de l'image de fond
     if (data.bgImage === "dell") {
-      // "dell" => suppression
       data.bgImage = null;
     } else if (typeof data.bgImage === "string") {
-      const buffer = Buffer.from(
-        data.bgImage.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-      );
-      const ext =
-        /^data:(image\/\w+);base64,/.exec(data.bgImage)?.[1].split("/")[1] ??
-        "png";
-      const uniqueFileName = `${userId}_${Date.now()}.${ext}`;
-      
-      if (isProd) {
-        // En PROD: upload via Vercel Blob
-        const result = await put(`users/${uniqueFileName}`, buffer, {
-          access: "public",
-        });
-        data.bgImage = result.url;
-      } else {
-        // En DEV: stockage local
-        const uploadPath = path.join(
-          process.cwd(),
-          "public",
-          "uploads",
-          "users",
-          uniqueFileName
-        );
-        await fs.writeFile(uploadPath, buffer);
-        data.bgImage = `/uploads/users/${uniqueFileName}`;
-      }
+      data.bgImage = await processImage(data.bgImage);
     }
-    
-    // 3) Mise à jour en base
+
+    // Mise à jour de l'utilisateur en base
     return await prisma.user.update({
-      where: {id: userId},
+      where: { id: userId },
       data,
     });
   } catch (error) {
