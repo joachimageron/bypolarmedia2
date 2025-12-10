@@ -1,10 +1,10 @@
-import NextAuth, {getServerSession, NextAuthOptions} from "next-auth"
-import {PrismaAdapter} from "@auth/prisma-adapter"
-import {prisma} from "@/prisma/prisma"
+import NextAuth, { getServerSession, NextAuthOptions } from "next-auth"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { prisma } from "@/prisma/prisma"
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {verifyUserCredentials} from "@/utils/data/user";
+import { verifyUserCredentials } from "@/utils/data/user-auth";
 
 const githubId = process.env.GITHUB_ID;
 const githubSecret = process.env.GITHUB_SECRET;
@@ -12,7 +12,7 @@ const googleId = process.env.GOOGLE_ID;
 const googleSecret = process.env.GOOGLE_SECRET;
 
 if (typeof githubId === "undefined" || typeof githubSecret === "undefined" || typeof googleId === "undefined" || typeof googleSecret === "undefined") {
-  
+
   throw new Error(
     `Missing GITHUB_ID, GITHUB_SECRET, GOOGLE_ID or GOOGLE_SECRET environment variables`
   );
@@ -36,8 +36,8 @@ const authOptions: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        email: {label: "Email", type: "text", placeholder: "jsmith"},
-        password: {label: "Password", type: "password"}
+        email: { label: "Email", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
         // Add logic here to look up the user from the credentials supplied
@@ -49,7 +49,7 @@ const authOptions: NextAuthOptions = {
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
           return null
-          
+
           // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
         }
       }
@@ -60,14 +60,14 @@ const authOptions: NextAuthOptions = {
     strategy: "jwt"
   },
   callbacks: {
-    async jwt({token, account, user}) {
+    async jwt({ token, account, user }) {
       if (account) {
         token.accessToken = account.access_token
         token.userId = user?.id
       }
       return token
     },
-    async session({session, token}) {
+    async session({ session, token }) {
       if (typeof token.accessToken === "string") {
         session.accessToken = token.accessToken
       }

@@ -1,7 +1,7 @@
 'use server';
-import {prisma} from "@/prisma/prisma";
+import { prisma } from "@/prisma/prisma";
 import bcrypt from 'bcryptjs';
-import {serverSession} from "@/utils/auth";
+import { serverSession } from "@/utils/auth";
 import uploadImage from "@/utils/uploadImage";
 
 /**
@@ -29,22 +29,7 @@ export async function createUser(data: {
   });
 }
 
-/**
- * Vérifier les informations de connexion d'un utilisateur et le retourne si les informations sont correctes
- * @param email
- * @param password
- */
-export async function verifyUserCredentials(email: FormDataEntryValue, password: FormDataEntryValue) {
-  const user = await prisma.user.findFirst({
-    where: {email: String(email)},
-  });
-  
-  if (user?.password && bcrypt.compareSync(String(password), user.password)) {
-    return user;
-  } else {
-    return null;
-  }
-}
+
 
 
 /**
@@ -53,7 +38,7 @@ export async function verifyUserCredentials(email: FormDataEntryValue, password:
  */
 export async function userExists(id: string) {
   const user = await prisma.user.findUnique({
-    where: {id},
+    where: { id },
   });
   return !!user;
 }
@@ -65,7 +50,7 @@ export async function userExists(id: string) {
 export async function getUserById(userId: string | null) {
   if (!userId) return null;
   return prisma.user.findUnique({
-    where: {id: userId},
+    where: { id: userId },
     include: {
       followers: true,
       following: true,
@@ -128,7 +113,7 @@ export async function getSearchUsers(query: string) {
  */
 export async function getUserByEmail(email: string) {
   return prisma.user.findUnique({
-    where: {email},
+    where: { email },
     include: {
       posts: true,
       followers: true,
@@ -189,14 +174,14 @@ export async function updateUser(
 export async function toggleDarkMode() {
   const session = await serverSession();
   if (!session) return null;
-  
+
   const user = await prisma.user.findUnique({
     where: { id: session.user.userId },
     select: { darkMode: true }
   });
-  
+
   if (!user) return null;
-  
+
   return prisma.user.update({
     where: { id: session.user.userId },
     data: {
