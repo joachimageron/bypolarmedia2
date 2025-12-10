@@ -64,7 +64,6 @@ const authOptions: NextAuthOptions = {
       if (account) {
         token.accessToken = account.access_token
         token.userId = user?.id
-        token.image = null
       }
       return token
     },
